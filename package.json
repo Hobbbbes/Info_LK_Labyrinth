@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "concurrently -n tsc,serve \"tsc --watch\" \"serve\""
+  },
+  "devDependencies": {
+    "concurrently": "^6.0.2",
+    "serve": "^11.3.2",
+    "typescript": "^4.2.4"
+  }
+}
