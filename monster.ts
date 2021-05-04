@@ -33,4 +33,3 @@ export class Monster extends Entity{
     return (this.hp)
   }
 }
-

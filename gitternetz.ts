@@ -1,11 +1,11 @@
 import {isElem, isElem1, shuffle} from "./hilfsfunktionen.js"
-import {Room as r} from "./room.js"
+import {Room} from "./room.js"
 
 
 export class GitterNetz {
     hoch: number;
     breit: number;
-    rooms: Array<r.Room>;
+    rooms: Array<[number, Room]>;
     edges: Array<[number, number, boolean]>;
     ende:number
     start:number
@@ -14,15 +14,15 @@ export class GitterNetz {
       this.breit = breit;
       this.rooms = [];
       for (let i =0; i < this.breit*this.hoch; i++){
-        let broom = new r.Room()
-        this.rooms.push([i, broom]); 
+        let broom = new Room()
+        this.rooms.push([i, broom]);
       }	
       this.edges = [];
       for (let i = 0; i < (this.hoch*this.breit); i++) {
-        if ((!((i%this.breit)+1===this.breit))&&(!(h.isElem([i,i+1,false], this.edges)))) {
+        if ((!((i%this.breit)+1===this.breit))&&(!(isElem([i,i+1,false], this.edges)))) {
           this.edges.push([i,i+1,false])
         }
-        if ((!(i>(this.breit*(this.hoch-1)-1)))&&(!(h.isElem([i,i+this.breit,false], this.edges)))) {
+        if ((!(i>(this.breit*(this.hoch-1)-1)))&&(!(isElem([i,i+this.breit,false], this.edges)))) {
           this.edges.push([i,i+this.breit,false])
         }
       }
@@ -50,9 +50,9 @@ export class GitterNetz {
       return raumliste
     }
     dfs(probability:number = 5, start:number=0, way:number[] = [0]) {
-        let next:number[] = h.shuffle(this.findneighbours(start))
+        let next:number[] = shuffle(this.findneighbours(start))
         for (let room of next) {
-            let in_way = h.isElem1(room, way)
+            let in_way = isElem1(room, way)
             let chance = Math.random()*100 <= probability;
             if (!in_way || chance) {
                 this.edges.forEach(function(value) {if((value[0] === start && value[1] === room) || (value[1] === start && value[0] === room)) {value[2] = true}})
@@ -77,12 +77,12 @@ export class GitterNetz {
       strS = " "
       for (let i = 0; i < this.hoch*this.breit; i++) {
         let currentrow = Math.floor(i/this.breit)
-        if (h.isElem([i, i+this.breit, false], this.edges)||i>(this.breit*(this.hoch-1))-1) {
+        if (isElem([i, i+this.breit, false], this.edges)||i>(this.breit*(this.hoch-1))-1) {
           row = row.concat(strB.toString())
         } else {
           row = row.concat(strS.toString())
         }
-        if (h.isElem([i, i+1, false], this.edges)) {
+        if (isElem([i, i+1, false], this.edges)) {
           row = row.concat(strE.toString())
         } else {
           row = row.concat(strS.toString())
@@ -103,3 +103,4 @@ export class GitterNetz {
     }
 }
 
+export let g = new GitterNetz(30,40)

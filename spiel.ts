@@ -1,7 +1,7 @@
-import {GitterNetz as gi} from "./gitternetz.js"
+import g from "./gitternetz.js"
 import {isElem} from "./hilfsfunktionen.js"
-import {status as s} from "./status.js"
-import {room as r} from "./room.js"
+import {Status} from "./status.js"
+import {Room, RoomOut} from "./room.js"
 
 
 enum Direction{
@@ -20,14 +20,14 @@ export default class Spiel{
     this.current_agent = -1
   }
   createAgent() {
-    this.agents.push([g.coordsToRoomNum([g.start, 0])], 30, 1])
+    this.agents.push([g.coordsToRoomNum([g.start, 0]), 30, 1])
     this.current_agent ++
     return this.current_agent
   }
   
   neighbours(id:number) {
       let i = this.agents[id][0]
-      let raumliste: (r.RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
+      let raumliste: (RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
       if ((isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit].getRoom()}
       if ((isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1].getRoom()}
       if ((isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit].getRoom()}
@@ -43,21 +43,21 @@ export default class Spiel{
       {
        player[0] = i-g.breit 
        player[1] = player[1] - g.rooms[i-g.breit].monster.hp + g.rooms[i-g.breit].weapon.atk
-    } 
       }
-    if (direction == Direction.Right) {
+    }
+    else if (direction == Direction.Right) {
       if (this.neighbours(i)[0]) {
        player[0] = i+1 
        player[1] = player[1] - g.rooms[i+1].monster.hp + g.rooms[i+1].weapon.atk
-    } 
       }
-    if (direction == Direction.Down) {
+    }
+    else if (direction == Direction.Down) {
       if (this.neighbours(i)[0]) {
        player[0] = i+g.breit 
        player[1] = player[1] - g.rooms[i+g.breit].monster.hp + g.rooms[i+g.breit].weapon.atk
-    } 
       }
-    if (direction == Direction.Left) {
+    }
+    else if (direction == Direction.Left) {
       if (this.neighbours(i)[0]) {
        player[0] = i-1 
        player[1] = player[1] - g.rooms[i-1].monster.hp + g.rooms[i-1].weapon.atk
@@ -66,7 +66,7 @@ export default class Spiel{
   }
   getStatus(id:number) {
     let player = this.agents[id]
-    return s.Status(g.roomNumToCoords(player[0]), player[1], player[2])
+    return Status(g.roomNumToCoords(player[0]), player[1], player[2])
   }
   deleteAgent(id:number) {
     this.agents[id] = undefined

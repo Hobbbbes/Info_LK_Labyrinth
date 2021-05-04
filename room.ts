@@ -1,5 +1,5 @@
-import {Monster as m} from "./monster.js"
-import {Weapon as w} from "./weapon.js"
+import {Monster} from "./monster.js"
+import {Weapon} from "./weapon.js"
 
 
 
@@ -20,25 +20,29 @@ export class RoomOut {
   getIsGoal(){return this.isGoal;}
 }
 
-@m.generate_monster
-@w.generate_weapon
+@Monster.generate_monster
+@Weapon.generate_weapon
+
+
 export class Room {
-  monster: m.Monster
-  weapon: w.Weapon
+  monster: Monster
+  weapon: Weapon
   goal: boolean
-  constructor(goal: boolean) {
+  constructor(goal: boolean=false) {
     this.goal = goal
     if (Math.floor(Math.random()) * 101 > 70){
-    this.monster = new m.Monster(m.generate_monster())
+    this.monster = new Monster(0)
+    this.monster.generate_monster()
     }
     else {
-      this.monster = new m.Monster(0)
+      this.monster = new Monster(0)
     }
     if (Math.floor(Math.random()) * 101 > 60){
-    this.weapon = new w.Weapon(w.generate_weapon())
+    this.weapon = new Weapon(0)
+    this.weapon
     }
     else {
-      this.weapon = new w.Weapon(0)
+      this.weapon = new Weapon(0)
     }
     
   }
