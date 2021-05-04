@@ -28,10 +28,10 @@ export default class Spiel{
   neighbours(id:number) {
       let i = this.agents[id][0]
       let raumliste: (RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
-      if ((isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit].getRoom()}
-      if ((isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1].getRoom()}
-      if ((isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit].getRoom()}
-      if ((isElem([i, i-1, true], g.edges))) {raumliste[3] = g.rooms[i-1].getRoom()}
+      if ((isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit][1].getRoom()}
+      if ((isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1][1].getRoom()}
+      if ((isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit][1].getRoom()}
+      if ((isElem([i, i-1, true], g.edges))) {raumliste[3] = g.rooms[i-1][1].getRoom()}
       return raumliste
   }
 
@@ -39,7 +39,7 @@ export default class Spiel{
     let player = this.agents[id]
     let i = this.agents[id][0]
 
-    if (player[1] > 0 && !g.rooms[i].goal) {
+    if (player[1] > 0 && !g.rooms[i][1].goal) {
 		let direction_to_check = -1
 		let next_room = -1
 
@@ -62,18 +62,18 @@ export default class Spiel{
 		
 		if (this.neighbours(i)[direction_to_check]) {
       player[0] = next_room
-    	player[2] = player[2] - g.rooms[next_room].monsterhp + g.rooms[next_room].sword
+    	player[2] = player[2] - g.rooms[next_room][1].monsterhp + g.rooms[next_room][1].sword
       if (player[2] < 0) {
         player[1] = player[1] + player[2] 
         player[2] = 0
       }
-      if (player[2] >= g.rooms[next_room].monsterhp) {
-        g.rooms[next_room].monsterhp = 0
+      if (player[2] >= g.rooms[next_room][1].monsterhp) {
+        g.rooms[next_room][1].monsterhp = 0
       }
       else {
-        g.rooms[next_room].monsterhp = g.rooms[next_room].monsterhp - player[2]
+        g.rooms[next_room][1].monsterhp = g.rooms[next_room][1].monsterhp - player[2]
       }
-      g.rooms[next_room].sword = 0
+      g.rooms[next_room][1].sword = 0
     }
     }
   }

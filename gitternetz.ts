@@ -14,7 +14,7 @@ export class GitterNetz {
       this.breit = breit;
       this.rooms = [];
       for (let i =0; i < this.breit*this.hoch; i++){
-        let broom = new Room()
+        let broom = new Room();
         this.rooms.push([i, broom]);
       }	
       this.edges = [];
@@ -35,7 +35,7 @@ export class GitterNetz {
         if (ecke[0] === i) {return ecke[1]}
       }
     }
-    roomNumToCoords(i:number) {
+    roomNumToCoords(i:number):[number, number] {
       return [(Math.floor(i/(this.breit))), i%(this.breit)]
     }
     coordsToRoomNum([x,y]:[number,number]) {

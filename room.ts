@@ -17,7 +17,7 @@ export class RoomOut {
 
 
 
-const Room = sword(monster(class Room {
+export const Room = sword(monster(class Room {
   monsterhp: number
 	sword:number
   goal: boolean
