@@ -1,4 +1,4 @@
-import g from "./gitternetz.js"
+import {g} from "./gitternetz.js"
 import {isElem} from "./hilfsfunktionen.js"
 import {Status} from "./status.js"
 import {Room, RoomOut} from "./room.js"
@@ -38,6 +38,8 @@ export default class Spiel{
   move(direction: Direction, id:number) {
     let player = this.agents[id]
     let i = this.agents[id][0]
+
+    if (player[1] > 0 && !g.rooms[i].goal) {
 		let direction_to_check = -1
 		let next_room = -1
 
@@ -60,12 +62,28 @@ export default class Spiel{
 		
 		if (this.neighbours(i)[direction_to_check]) {
       player[0] = next_room
-    	player[1] = player[1] - g.rooms[next_room].monster.hp + g.rooms[next_room].weapon.atk
+    	player[2] = player[2] - g.rooms[next_room].monsterhp + g.rooms[next_room].sword
+      if (player[2] < 0) {
+        player[1] = player[1] + player[2] 
+        player[2] = 0
       }
+      if (player[2] >= g.rooms[next_room].monsterhp) {
+        g.rooms[next_room].monsterhp = 0
+      }
+      else {
+        g.rooms[next_room].monsterhp = g.rooms[next_room].monsterhp - player[2]
+      }
+      g.rooms[next_room].sword = 0
+    }
+    }
   }
   getStatus(id:number) {
     let player = this.agents[id]
-    return new Status(g.roomNumToCoords(player[0]), player[1], player[2])
+    let isFinish = false
+    if (player[0] === (g.breit*g.ende) - 1) {
+      isFinish = true
+    }
+    return new Status(g.roomNumToCoords(player[0]), player[1], player[2], isFinish)
   }
   deleteAgent(id:number) {
     this.agents[id] = undefined
