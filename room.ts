@@ -22,8 +22,6 @@ export class RoomOut {
 
 @Monster.generate_monster
 @Weapon.generate_weapon
-
-
 export class Room {
   monster: Monster
   weapon: Weapon
@@ -39,7 +37,7 @@ export class Room {
     }
     if (Math.floor(Math.random()) * 101 > 60){
     this.weapon = new Weapon(0)
-    this.weapon
+    this.weapon.generate_weapon()
     }
     else {
       this.weapon = new Weapon(0)

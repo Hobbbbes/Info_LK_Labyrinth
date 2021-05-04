@@ -12,7 +12,7 @@ enum Direction{
 }
 
 export default class Spiel{
-  agents:[number, number, number][] // [raumIndex, HP, attackDMG]
+  agents:[number, number, number][] // [[raumIndex, HP, attackDMG], ...]
   current_agent:number
 
   constructor() {
@@ -38,35 +38,34 @@ export default class Spiel{
   move(direction: Direction, id:number) {
     let player = this.agents[id]
     let i = this.agents[id][0]
+		let direction_to_check = -1
+		let next_room = -1
+
     if (direction == Direction.Up) {
-      if (this.neighbours(i)[0]) 
-      {
-       player[0] = i-g.breit 
-       player[1] = player[1] - g.rooms[i-g.breit].monster.hp + g.rooms[i-g.breit].weapon.atk
-      }
+			let direction_to_check = 0;
+			let next_room = i-g.breit;
     }
     else if (direction == Direction.Right) {
-      if (this.neighbours(i)[0]) {
-       player[0] = i+1 
-       player[1] = player[1] - g.rooms[i+1].monster.hp + g.rooms[i+1].weapon.atk
-      }
+			let direction_to_check = 1;
+			let next_room = i+1;
     }
     else if (direction == Direction.Down) {
-      if (this.neighbours(i)[0]) {
-       player[0] = i+g.breit 
-       player[1] = player[1] - g.rooms[i+g.breit].monster.hp + g.rooms[i+g.breit].weapon.atk
-      }
+			let direction_to_check = 2;
+			let next_room = i+g.breit;
     }
     else if (direction == Direction.Left) {
-      if (this.neighbours(i)[0]) {
-       player[0] = i-1 
-       player[1] = player[1] - g.rooms[i-1].monster.hp + g.rooms[i-1].weapon.atk
-      } 
+			let direction_to_check = 3;
+			let next_room = i-1;
     }
+		
+		if (this.neighbours(i)[direction_to_check]) {
+      player[0] = next_room
+    	player[1] = player[1] - g.rooms[next_room].monster.hp + g.rooms[next_room].weapon.atk
+      }
   }
   getStatus(id:number) {
     let player = this.agents[id]
-    return Status(g.roomNumToCoords(player[0]), player[1], player[2])
+    return new Status(g.roomNumToCoords(player[0]), player[1], player[2])
   }
   deleteAgent(id:number) {
     this.agents[id] = undefined
