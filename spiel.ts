@@ -1,5 +1,5 @@
-import {GitterNetz as g} from "./gitternetz.js"
-import {hilfsfunktionen as h} from "./hilfsfunktionen.js"
+import {GitterNetz as gi} from "./gitternetz.js"
+import {isElem} from "./hilfsfunktionen.js"
 import {status as s} from "./status.js"
 import {room as r} from "./room.js"
 
@@ -20,7 +20,7 @@ export default class Spiel{
     this.current_agent = -1
   }
   createAgent() {
-    this.agents.push([g.coordsToRoomNum[g.start, 0], 30, 1])
+    this.agents.push([g.coordsToRoomNum([g.start, 0])], 30, 1])
     this.current_agent ++
     return this.current_agent
   }
@@ -28,10 +28,10 @@ export default class Spiel{
   neighbours(id:number) {
       let i = this.agents[id][0]
       let raumliste: (r.RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
-      if ((h.isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit].getRoom()}
-      if ((h.isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1].getRoom()}
-      if ((h.isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit].getRoom()}
-      if ((h.isElem([i, i-1, true], g.edges))) {raumliste[3] = g.rooms[i-1].getRoom()}
+      if ((isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit].getRoom()}
+      if ((isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1].getRoom()}
+      if ((isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit].getRoom()}
+      if ((isElem([i, i-1, true], g.edges))) {raumliste[3] = g.rooms[i-1].getRoom()}
       return raumliste
   }
 

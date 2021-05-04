@@ -1,4 +1,4 @@
-import {hilfsfunktionen as h} from "./hilfsfunktionen.js"
+import {isElem, isElem1, shuffle} from "./hilfsfunktionen.js"
 import {Room as r} from "./room.js"
 
 
