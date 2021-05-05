@@ -37,3 +37,7 @@ document.addEventListener("keydown", (event) => {
 */
 document.body.appendChild(canvas);
 //npm run dev
+
+function helloWorld(){
+  console.log("Hello World")
+}
