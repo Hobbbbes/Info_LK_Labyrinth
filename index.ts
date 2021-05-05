@@ -4,6 +4,7 @@ const canvas = document.createElement("canvas");
 canvas.width = 600;
 canvas.height = 600;
 const ctx = canvas.getContext("2d");
+ctx.fillStyle = "#a86b32";
 ctx.imageSmoothingEnabled = false;
 Player.setContext(ctx);
 Room.setContext(ctx);
@@ -11,7 +12,7 @@ Room.setSprites(document, "sprites/bricksx64.png","sprites/Sword.png","sprites/S
 var left = new Room(true,true,200,200);
 var right = new Room(false,true,400,200);
 var middle = new Room(true,false,300,200);
-var up = new Room(false,false,300,100);
+var up = new Room(false,false,300,100,2);
 var down = new Room(false,true,300,300);
 var p = new Player("sprites/adventurer-idle-",document,270,170,3);
 var pAttack = new Player("sprites/adventurer-attack1-",document,270,170,4);
@@ -23,7 +24,7 @@ setInterval(() => {
   middle.draw();
   up.draw();
   down.draw();
-  pAttack.draw();
+  p.draw();
   left.fight = true;
 },16)
 
@@ -41,3 +42,4 @@ document.body.appendChild(canvas);
 function helloWorld(){
   console.log("Hello World")
 }
+document.querySelector('button[type=button4]',).addEventListener('click',helloWorld)

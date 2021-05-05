@@ -1,3 +1,5 @@
+
+
 export default class Room{
     private hasSword : boolean;
     private hasMonster : boolean;
@@ -5,6 +7,7 @@ export default class Room{
     private MonsterFrameNumber : number;
     private x : number;
     private y : number;
+    private isOpen : number; //Closed, Left,Down,Right,Up
     private static wallSprite : HTMLImageElement;
     private static swordSprite : HTMLImageElement;
     private static monsterSprites : HTMLImageElement[] = [];
@@ -24,12 +27,13 @@ export default class Room{
     static setContext(ctx : CanvasRenderingContext2D){
         this.ctx = ctx;
     }
-    constructor(hasSword : boolean, hasMonster : boolean, x : number, y : number){
+    constructor(hasSword : boolean, hasMonster : boolean, x : number, y : number, isOpen : number = 0){
         this.hasMonster = hasMonster;
         this.hasSword = hasSword;
         this.x = x;
         this.y = y;
         this.MonsterFrameNumber = 0;
+        this.isOpen = isOpen;
         setInterval(() => {
             this.MonsterFrameNumber += 1;
           }, 100);
@@ -38,10 +42,20 @@ export default class Room{
         for(var x = this.x - 50; x <= this.x + 50; x+=25){
             Room.ctx.drawImage(Room.wallSprite, x, this.y + 50,25,25);
             Room.ctx.drawImage(Room.wallSprite, x, this.y - 50,25,25);
+            if(this.isOpen == 2){
+                Room.ctx.fillRect( x, this.y + 50,25,25);
+            } else if(this.isOpen == 4){
+                Room.ctx.fillRect( x, this.y - 50,25,25);
+            }
         }
         for(var y = this.y - 50; y <= this.y + 50; y+=25){
             Room.ctx.drawImage(Room.wallSprite, this.x + 50, y,25,25);
             Room.ctx.drawImage(Room.wallSprite, this.x - 50, y,25,25);
+            if(this.isOpen == 1){
+                Room.ctx.fillRect( this.x + 50, y,25,25);
+            } else if(this.isOpen == 3){
+                Room.ctx.fillRect( this.x + 50, y,25,25);
+            }
         }
         if (this.hasMonster && !this.fight){
             Room.ctx.drawImage(Room.monsterSprites[0], this.x-50, this.y-50);
