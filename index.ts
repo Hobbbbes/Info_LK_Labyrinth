@@ -1,6 +1,6 @@
 import Player from "./player.js"
 import Room from "./room.js"
-const canvas = document.createElement("canvas");
+const canvas = document.querySelector('canvas[class="1"') as HTMLCanvasElement;
 canvas.width = 600;
 canvas.height = 600;
 const ctx = canvas.getContext("2d");
