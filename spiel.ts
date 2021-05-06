@@ -20,7 +20,7 @@ export default class Spiel{
     this.current_agent = -1
   }
   createAgent() {
-    this.agents.push([g.coordsToRoomNum([g.start, 0]), 30, 1])
+    this.agents.push([g.coordsToRoomNum([g.start, 0]), 30, 3])
     this.current_agent ++
     return this.current_agent
   }
@@ -61,19 +61,26 @@ export default class Spiel{
     }
 		
 		if (this.neighbours(i)[direction_to_check]) {
-      player[0] = next_room
-    	player[2] = player[2] - g.rooms[next_room][1].monsterhp + g.rooms[next_room][1].sword
-      if (player[2] < 0) {
-        player[1] = player[1] + player[2] 
-        player[2] = 0
-      }
+      player[0] = next_room // Betritt nächsten Raum
+    	player[2] = player[2] + g.rooms[next_room][1].sword // Sammelt Schwert auf
+			g.rooms[next_room][1].sword = 0
+			
       if (player[2] >= g.rooms[next_room][1].monsterhp) {
         g.rooms[next_room][1].monsterhp = 0
       }
       else {
         g.rooms[next_room][1].monsterhp = g.rooms[next_room][1].monsterhp - player[2]
       }
-      g.rooms[next_room][1].sword = 0
+
+			player[2] -= g.rooms[next_room][1].monsterhp  // wird vom monster geboxt
+			
+			
+      if (player[2] < 0) {
+        player[1] = player[1] + player[2] 
+        player[2] = 3
+      }
+
+      
     }
     }
   }

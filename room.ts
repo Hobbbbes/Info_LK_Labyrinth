@@ -50,4 +50,3 @@ function sword<T extends { new(...args: any[]): {} }>(constructor: T) {
 }
 
 let r= new Room()
-
