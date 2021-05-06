@@ -32,7 +32,7 @@ export class Agent {
 
    private checkAllVisited(): boolean{
      for (let i = 0; i < this.visited.length; i ++)
-      if (this.visited[i] == undefined || this.visited[i][2] == Visited.Unvisited) //pruefen
+      if (this.visited[i] == undefined || this.visited[i][2] != Visited.Visited_DeadEnd) //pruefen
         return false;
      return true;
    }

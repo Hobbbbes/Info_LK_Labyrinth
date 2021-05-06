@@ -7,39 +7,22 @@ export class LeftWallStrategy extends Strategy{
   
   public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
     
-    let sortedDirections = Object.assign([], availableDirections);
-    sortedDirections.sort((a, b) => this.getNewValueForDirection(a)-this.getNewValueForDirection(b));
+    //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
+    availableDirections.sort((a, b) => a - b);
     
     let lastDirection;
     let lastDirInd = -1;
 
-    lastDirection = super.getDirectionToLastRoom(pos);
+    lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
     if(lastDirection){
-      lastDirInd = sortedDirections.indexOf(lastDirection);
+      lastDirInd = availableDirections.indexOf(lastDirection);
     }
     
     let directions:Direction[] = [];
-    for(var i = 1; i <= sortedDirections.length; i++){
-      directions.push(sortedDirections[(lastDirInd+i) % sortedDirections.length]);
+    for(var i = 1; i <= availableDirections.length; i++){
+      directions.push(availableDirections[(lastDirInd+i) % availableDirections.length]);
     }
     
     return directions;
-  }
-
-  private getNewValueForDirection(direction:Direction){
-    switch(direction){
-      case Direction.Up:{
-        return 0;
-      }
-      case Direction.Right:{
-        return 1;
-      }
-      case Direction.Down:{
-        return 2;
-      }
-      case Direction.Left:{
-        return 3;
-      }
-    }
   }
 } 
