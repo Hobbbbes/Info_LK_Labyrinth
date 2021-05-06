@@ -1,7 +1,7 @@
 import {g} from "./gitternetz.js"
 import {isElem} from "./hilfsfunktionen.js"
 import {Status} from "./status.js"
-import {Room, RoomOut} from "./room.js"
+import {Room, RoomOut} from "./raum.js"
 
 
 enum Direction{
