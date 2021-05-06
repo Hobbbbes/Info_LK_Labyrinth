@@ -21,8 +21,6 @@ export enum Visited{
 //Strategy-Konstrukt zum auswählen der Räume
 export abstract class Strategy{
 
-  protected lastRoomCoords:[number, number];
-
   protected breite:number;
   //room, lastRoomNum, visited
   protected visitedRooms:[Room, number, Visited][];
@@ -51,7 +49,12 @@ export abstract class Strategy{
 
     this.setVisitedState(pos, this.calculateVisitedState(pos, availableCoords, nextDirection));
 
-    this.lastRoomCoords = pos;
+    // set last room
+    let newRoomNum = coordsToRoomNum(this.getPosFromDirection(pos, nextDirection), this.breite);
+    let oldRoomNum = coordsToRoomNum(pos, this.breite);
+    if(!this.visitedRooms[newRoomNum]){
+      this.visitedRooms[newRoomNum][1] = oldRoomNum;
+    }
 
     return nextDirection;
   }
@@ -67,7 +70,7 @@ export abstract class Strategy{
       let nextRoom = availableNeighbourRooms[i];
       let nextRoomNum = coordsToRoomNum(availableCoords[i], this.breite);
       if(!this.visitedRooms[nextRoomNum]){
-        this.visitedRooms[nextRoomNum] = [nextRoom, roomNum, Visited.Unvisited];
+        this.visitedRooms[nextRoomNum] = [nextRoom, null, Visited.Unvisited];
       }else if(!this.visitedRooms[nextRoomNum][0]){
         this.visitedRooms[nextRoomNum][0] = nextRoom;
       }
@@ -87,12 +90,21 @@ export abstract class Strategy{
 
     for(let i of availableCoords){
       let neighbourRoomNum = coordsToRoomNum(i, this.breite);
-      if(i[0] != nextCoord[0] || i[1] != nextCoord[1]){
-        let neighbourVisitedState = this.visitedRooms[neighbourRoomNum][2];
-        if(neighbourVisitedState == Visited.Unvisited){
-          visitedState = Math.min(visitedState, Visited.Visited_unvisited);
-        }else{
-          visitedState = Math.min(visitedState, neighbourVisitedState)
+
+      let nextRoomNum = coordsToRoomNum(i, this.breite);
+      let lastRoomNum = coordsToRoomNum(pos, this.breite);
+
+      if(!this.visitedRooms[nextRoomNum][1] 
+      || this.visitedRooms[nextRoomNum][1] == lastRoomNum
+      || (this.visitedRooms[lastRoomNum][1] && this.visitedRooms[lastRoomNum][1] == nextRoomNum)){
+        
+        if(i[0] != nextCoord[0] || i[1] != nextCoord[1]){
+          let neighbourVisitedState = this.visitedRooms[neighbourRoomNum][2];
+          if(neighbourVisitedState == Visited.Unvisited){
+            visitedState = Math.min(visitedState, Visited.Visited_unvisited);
+          }else{
+            visitedState = Math.min(visitedState, neighbourVisitedState)
+          }
         }
       }
     }
@@ -117,8 +129,10 @@ export abstract class Strategy{
     for(var d = 0; d < availableDirections.length; d++){
       let nextRoomCoords = this.getPosFromDirection(pos, availableDirections[d]);
       let nextRoomNum = coordsToRoomNum(nextRoomCoords, this.breite);
-
-      if(!this.visitedRooms[nextRoomNum][1]){
+      let lastRoomNum = coordsToRoomNum(pos, this.breite);
+      if(!this.visitedRooms[nextRoomNum][1] 
+      || this.visitedRooms[nextRoomNum][1] == lastRoomNum
+      || (this.visitedRooms[lastRoomNum][1] && this.visitedRooms[lastRoomNum][1] == nextRoomNum)){
         let visitedState = this.getVisitedForDirection(pos, availableDirections[d]);
         if(visitedState < bestVisitedState){
           nextDirection = availableDirections[d];
