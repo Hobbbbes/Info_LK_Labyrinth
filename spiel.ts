@@ -1,7 +1,7 @@
-import {g} from "./gitternetz.js"
 import {isElem} from "./hilfsfunktionen.js"
 import {Status} from "./status.js"
 import {Room, RoomOut} from "./raum.js"
+import {GitterNetz} from "./gitternetz.js"
 
 
 enum Direction{
@@ -12,87 +12,82 @@ enum Direction{
 }
 
 export default class Spiel{
-  agents:[number, number, number][] // [[raumIndex, HP, attackDMG], ...]
-  current_agent:number
+  private agents:[number, number, number][]; // [[raumIndex, HP, attackDMG], ...]
+  private current_agent:number;
+  private g: GitterNetz;
 
-  constructor() {
+  constructor(hoch, breit) {
     this.agents = []
     this.current_agent = -1
+    this.g = new GitterNetz(hoch, breit)
   }
-  createAgent() {
-    this.agents.push([g.coordsToRoomNum([g.start, 0]), 30, 3])
+  createAgent():number {
+    this.agents.push([this.g.coordsToRoomNum([this.g.start, 0]), 30, 3])
     this.current_agent ++
     return this.current_agent
   }
   
-  neighbours(id:number) {
+  neighbours(id:number):(RoomOut | undefined)[] {
       let i = this.agents[id][0]
       let raumliste: (RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
-      if ((isElem([i, i-g.breit, true], g.edges))) {raumliste[0] = g.rooms[i-g.breit][1].getRoom()}
-      if ((isElem([i, i+1, true], g.edges))) {raumliste[1] = g.rooms[i+1][1].getRoom()}
-      if ((isElem([i, i+g.breit, true], g.edges))) {raumliste[2] = g.rooms[i+g.breit][1].getRoom()}
-      if ((isElem([i, i-1, true], g.edges))) {raumliste[3] = g.rooms[i-1][1].getRoom()}
+      if ((isElem([i, i-this.g.breit, true], this.g.edges))) {raumliste[0] = this.g.rooms[i-this.g.breit][1].getRoom()}
+      if ((isElem([i, i+1, true], this.g.edges))) {raumliste[1] = this.g.rooms[i+1][1].getRoom()}
+      if ((isElem([i, i+this.g.breit, true], this.g.edges))) {raumliste[2] = this.g.rooms[i+this.g.breit][1].getRoom()}
+      if ((isElem([i, i-1, true], this.g.edges))) {raumliste[3] = this.g.rooms[i-1][1].getRoom()}
       return raumliste
   }
 
-  move(direction: Direction, id:number) {
+  move(direction: Direction, id:number):void {
     let player = this.agents[id]
     let i = this.agents[id][0]
 
-    if (player[1] > 0 && !g.rooms[i][1].goal) {
+    if (player[1] > 0 && !this.g.rooms[i][1].goal) {
 		let direction_to_check = -1
 		let next_room = -1
 
-    if (direction == Direction.Up) {
-			let direction_to_check = 0;
-			let next_room = i-g.breit;
+        if (direction == Direction.Up) {
+                let direction_to_check = 0;
+                let next_room = i-this.g.breit;
+        }
+        else if (direction == Direction.Right) {
+                let direction_to_check = 1;
+                let next_room = i+1;
+        }
+        else if (direction == Direction.Down) {
+                let direction_to_check = 2;
+                let next_room = i+this.g.breit;
+        }
+        else if (direction == Direction.Left) {
+                let direction_to_check = 3;
+                let next_room = i-1;
+        }
+            
+        if (this.neighbours(i)[direction_to_check]) {
+            player[0] = next_room // Betritt nächsten Raum
+            player[2] = player[2] + this.g.rooms[next_room][1].sword // Sammelt Schwert auf
+            this.g.rooms[next_room][1].sword = 0
+                    
+            if (player[2] >= this.g.rooms[next_room][1].monsterhp) {
+                this.g.rooms[next_room][1].monsterhp = 0
+            }
+            else {
+                this.g.rooms[next_room][1].monsterhp = this.g.rooms[next_room][1].monsterhp - player[2]
+            }
+            player[2] -= this.g.rooms[next_room][1].monsterhp  // wird vom monster geboxt
+            if (player[2] < 0) {
+                player[1] = player[1] + player[2] 
+                player[2] = 3
+                }  
+            }
+        }
     }
-    else if (direction == Direction.Right) {
-			let direction_to_check = 1;
-			let next_room = i+1;
-    }
-    else if (direction == Direction.Down) {
-			let direction_to_check = 2;
-			let next_room = i+g.breit;
-    }
-    else if (direction == Direction.Left) {
-			let direction_to_check = 3;
-			let next_room = i-1;
-    }
-		
-		if (this.neighbours(i)[direction_to_check]) {
-      player[0] = next_room // Betritt nächsten Raum
-    	player[2] = player[2] + g.rooms[next_room][1].sword // Sammelt Schwert auf
-			g.rooms[next_room][1].sword = 0
-			
-      if (player[2] >= g.rooms[next_room][1].monsterhp) {
-        g.rooms[next_room][1].monsterhp = 0
-      }
-      else {
-        g.rooms[next_room][1].monsterhp = g.rooms[next_room][1].monsterhp - player[2]
-      }
 
-			player[2] -= g.rooms[next_room][1].monsterhp  // wird vom monster geboxt
-			
-			
-      if (player[2] < 0) {
-        player[1] = player[1] + player[2] 
-        player[2] = 3
-      }
-
-      
-    }
-    }
-  }
-  getStatus(id:number) {
+  getStatus(id:number):Status {
     let player = this.agents[id]
     let isFinish = false
-    if (player[0] === (g.breit*g.ende) - 1) {
-      isFinish = true
+    if (player[0] === (this.g.breit*this.g.ende) - 1) {
+        isFinish = true
     }
-    return new Status(g.roomNumToCoords(player[0]), player[1], player[2], isFinish)
-  }
-  deleteAgent(id:number) {
-    this.agents[id] = undefined
-  }
+    return new Status(this.g.roomNumToCoords(player[0]), player[1], player[2], isFinish)
+    }
 }
