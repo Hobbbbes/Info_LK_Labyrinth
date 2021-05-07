@@ -73,12 +73,9 @@ export default class Spiel{
             }
             else {
                 this.g.rooms[next_room][1].monsterhp = this.g.rooms[next_room][1].monsterhp - player[2]
+		player[2] = 3
             }
-            player[2] -= this.g.rooms[next_room][1].monsterhp  // wird vom monster geboxt
-            if (player[2] < 0) {
-                player[1] = player[1] + player[2] 
-                player[2] = 3
-                }  
+            player[1] -= this.g.rooms[next_room][1].monsterhp  // wird vom monster geboxt 
             }
         }
     }
