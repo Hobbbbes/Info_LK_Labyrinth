@@ -1,11 +1,11 @@
 import {isElem, isElem1, shuffle} from "./hilfsfunktionen.js"
-import {Room} from "./raum.js"
+import {RoomIn} from "./raum.js"
 
 
 export class GitterNetz {
     hoch: number;
     breit: number;
-    rooms: Array<[number, Room]>;
+    rooms: Array<[number, RoomIn]>;
     edges: Array<[number, number, boolean]>;
     ende:number
     start:number
@@ -14,7 +14,7 @@ export class GitterNetz {
       this.breit = breit;
       this.rooms = [];
       for (let i =0; i < this.breit*this.hoch; i++){
-        let broom = new Room();
+        let broom = new RoomIn();
         this.rooms.push([i, broom]);
       }	
       this.edges = [];
