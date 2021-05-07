@@ -1,5 +1,5 @@
 
-export class RoomOut {
+export class Room {
   monster: number;
   sword: number; 
   isGoal: boolean; 
@@ -17,7 +17,7 @@ export class RoomOut {
 
 
 
-export const Room = sword(monster(class Room {
+export const RoomIn = sword(monster(class RoomIn {
   monsterhp: number
 	sword:number
   goal: boolean
@@ -27,12 +27,12 @@ export const Room = sword(monster(class Room {
     this.monsterhp = 0
   }
 	getRoom() {
-    let room = new RoomOut(this.monsterhp, this.sword, this.goal)
+    let room = new Room(this.monsterhp, this.sword, this.goal)
     return room
   }
 }))
 
-export type Room = InstanceType<typeof Room>
+export type RoomIn = InstanceType<typeof RoomIn>
 
 function monster<T extends { new(...args: any[]): {} }>(constructor: T) {
 	if (Math.round(Math.random()* 4) == 0) {
@@ -49,4 +49,4 @@ function sword<T extends { new(...args: any[]): {} }>(constructor: T) {
   }
 }
 
-let r= new Room()
+let r= new RoomIn()
