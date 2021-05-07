@@ -68,6 +68,7 @@ export default class Spiel{
             this.g.rooms[next_room][1].sword = 0
                     
             if (player[2] >= this.g.rooms[next_room][1].monsterhp) {
+		player[2] -= this.g.rooms[next_room][1].monsterhp
                 this.g.rooms[next_room][1].monsterhp = 0
             }
             else {
