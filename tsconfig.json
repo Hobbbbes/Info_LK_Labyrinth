@@ -3,6 +3,7 @@
     "lib": ["ESNext","DOM"],
     "outDir": "out",
     "sourceMap": true,
-    "target": "ESNext"
+    "target": "ESNext",
+		"experimentalDecorators": true
   }
 }
