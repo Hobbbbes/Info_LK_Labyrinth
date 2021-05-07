@@ -1,6 +1,6 @@
 import {isElem} from "./hilfsfunktionen.js"
 import {Status} from "./status.js"
-import {Room, RoomOut} from "./raum.js"
+import {RoomIn, Room} from "./raum.js"
 import {GitterNetz} from "./gitternetz.js"
 
 
@@ -27,9 +27,9 @@ export default class Spiel{
     return this.current_agent
   }
   
-  neighbours(id:number):(RoomOut | undefined)[] {
+  neighbours(id:number):(Room | undefined)[] {
       let i = this.agents[id][0]
-      let raumliste: (RoomOut | undefined)[] = [undefined, undefined, undefined, undefined]
+      let raumliste: (Room | undefined)[] = [undefined, undefined, undefined, undefined]
       if ((isElem([i, i-this.g.breit, true], this.g.edges))) {raumliste[0] = this.g.rooms[i-this.g.breit][1].getRoom()}
       if ((isElem([i, i+1, true], this.g.edges))) {raumliste[1] = this.g.rooms[i+1][1].getRoom()}
       if ((isElem([i, i+this.g.breit, true], this.g.edges))) {raumliste[2] = this.g.rooms[i+this.g.breit][1].getRoom()}
