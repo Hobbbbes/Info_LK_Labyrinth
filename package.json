@@ -1,6 +1,7 @@
 {
   "scripts": {
-    "dev": "concurrently -n tsc,serve \"tsc --watch\" \"serve\""
+    "dev": "concurrently -n tsc,serve \"tsc --watch\" \"serve\"",
+    "build": "tsc"
   },
   "devDependencies": {
     "concurrently": "^6.0.2",
