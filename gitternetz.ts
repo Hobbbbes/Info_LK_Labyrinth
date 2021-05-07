@@ -102,5 +102,3 @@ export class GitterNetz {
       }
     }
 }
-
-export let g = new GitterNetz(30,40)
