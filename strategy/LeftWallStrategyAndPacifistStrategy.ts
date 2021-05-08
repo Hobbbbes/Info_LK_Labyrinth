@@ -1,37 +1,25 @@
 
 import {Strategy, Direction, Visited} from "./Strategy"
 import {Room} from ?;
+import {LeftWallStrategy} from "./LeftWallStrategy";
 
-export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
+export class LeftWallStrategyAndMostlyPacifistStrategy extends LeftWallStrategy{
   
-  public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
-    //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
-    availableDirections.sort((a, b) => a - b);
-    
-    let lastDirection;
-    let lastDirInd = -1;
+  protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
 
-    lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
-    if(lastDirection){
-      lastDirInd = availableDirections.indexOf(lastDirection);
-    }
-    
-    let directions:Direction[] = [];
-    for(var i = 1; i <= availableDirections.length; i++){
-      let roomNum = super.getRoomNumFromDirection(pos, availableDirections[i]);
+    return availableDirections.filter(direction => {
+      let roomNum = super.getRoomNumFromDirection(pos, direction);
       let room:Room = super.visitedRooms[roomNum][0];
 
-      if(room.monster > 0){
-        if(room.monster - ap >= hp){
+      if(room.Monster > 0){
+        if(room.Monster - ap >= hp){
           super.visitedRooms[roomNum][2] = Visited.Monster_invincible;
         }else{
           super.visitedRooms[roomNum][2] = Visited.Monster;
         }
-      }else{
-        directions.push(availableDirections[(lastDirInd+i) % availableDirections.length]);
+          return false;
       }
-    }
-    
-    return directions;
+      return true;
+    });
   }
 } 

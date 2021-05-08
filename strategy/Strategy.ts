@@ -25,7 +25,9 @@ export class Strategy{
         this.visitedRooms = visitedRooms;
     }
 
-    protected abstract orderByPreferences(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[];
+    protected abstract filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[];
+
+    protected abstract orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[];
 
     public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Room{
 
@@ -43,10 +45,12 @@ export class Strategy{
 
         //nun lasse ich mir die liste der availableRooms anhand bestimmter Präferenzen sortieren, die von der Strategie abhängig sind. Falls Räume erst später besucht werden 
         //sollen, kann man sie aus der Liste streichen und den Raum mit dem entsprechenden VisitedStatus markieren
-        let sortedDirections = this.orderByPreferences(pos, Object.assign([], availableRooms), Object.assign([], availableDirections), hp, ap); 
+        availableDirections = this.orderByPreferences(pos, Object.assign([], availableDirections), hp, ap); 
+        let filteredDirections = this.filterDirections(pos, Object.assign([], availableRooms), Object.assign([], availableDirections), hp, ap);
+        let sortedDirections = this.orderByPreferences(pos, Object.assign([], filteredDirections), hp, ap);
 
         //als nächstes wird eine Direction ausgewählt. Bevorzugt werden nicht besichtigte Räume in der Reihenfolge, wie sie von der Strategie sortiert werden. 
-        // Wenn aber alle zurückgegebenen Directions schon besichtigt wurden, wird die ausgewählt, die den kleinsten Visited-Status hat
+        // Wenn aber alle zurückgegebenen Directions schon besichtigt wurden, wird die ausgewählt, die den kleinsten Visited-Status hat.
         let nextDirection = this.getNextDirection(pos, sortedDirections, availableDirections);
 
         //finde das geringste VisitedState aus den Nachbarräumen, die nicht zu einem Loop führen und die nicht dem Raum entsprechen, in den man als nächstes geht 
@@ -217,6 +221,10 @@ export class Strategy{
 
     protected getRoomInformationsFromRoomNum(roomNum:number):[Room, number, Visited]{
         return this.visitedRooms[roomNum];
+    }
+
+    protected getRoomFromDirection(pos:[number, number], direction):Room{
+        this.visitedRooms[this.getRoomNumFromDirection(pos, direction)][0];
     }
 
     protected getRoomNumFromDirection(pos:[number, number], direction:Direction):number{

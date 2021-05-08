@@ -4,7 +4,12 @@ import {Room} from ?;
 import {Direction} from "./Strategy";
 
 export class RndStrategy extends Strategy{
-    public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+
+    protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+      return availableDirections
+    }
+
+    protected orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
       let directions:Direction[] = [];
 
       while(availableDirections.length > 0){

@@ -5,7 +5,11 @@ import {Direction} from "./Strategy";
 
 export class LeftWallStrategy extends Strategy{
   
-  public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+  protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+    return availableDirections;
+  }
+
+  protected orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
     
     //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
     availableDirections.sort((a, b) => a - b);

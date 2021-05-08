@@ -5,13 +5,26 @@ import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
 
 export class AgressivStrategy extends Strategy{
   
-  public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
-    
-    let sortedDirections = Object.assign([], availableDirections);
-    sortedDirections.sort((a, b) => {
+  protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
 
-      let room_a = availableRooms[availableDirections.indexOf(a)]; 
-      let room_b = availableRooms[availableDirections.indexOf(b)];
+    return availableDirections.filter(direction => {
+      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), super.breite);
+      let room:Room = super.visitedRooms[roomNum][0];
+
+      if(room.monster - ap >= hp){
+        super.visitedRooms[roomNum][2] = Visited.Monster_invincible;
+        return false;
+      }
+
+      return true;
+    });
+  }
+
+  public orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+    return availableDirections.sort((a, b) => {
+
+      let room_a = super.getRoomFromDirection(pos, a); 
+      let room_b = super.getRoomFromDirection(pos, b);;
       
       let directionSort = a - b;
       let monsterSort = room_b.monster - room_a.monster;
@@ -31,17 +44,5 @@ export class AgressivStrategy extends Strategy{
         return swordSort;
       }
     });
-
-    for(let i = sortedDirections.length-1; i >= 0; i++){
-      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, sortedDirections[i]), super.breite);
-      let room:Room = super.visitedRooms[roomNum][0];
-
-      if(room.monster - ap >= hp){
-        super.visitedRooms[roomNum][2] = Visited.Monster_invincible;
-        sortedDirections.splice(i, 1);
-      }
-    }
-    
-    return sortedDirections;
   }
 } 
