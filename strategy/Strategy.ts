@@ -62,7 +62,7 @@ export class Strategy{
         let lastRoomNum = coordsToRoomNum(pos, this.breite);
         let newRoomNum = this.getRoomNumFromDirection(pos, nextDirection);
 
-        if(!this.visitedRooms[newRoomNum][1]){
+        if(this.visitedRooms[newRoomNum][2] == Visited.Unvisited){
             this.visitedRooms[newRoomNum][1] = lastRoomNum;
         }
     }
