@@ -120,7 +120,6 @@ export class Strategy{
                 this.visitedRooms[nextRoomNum] = [nextRoomNum, null, Visited.Unvisited];
             }else if(!this.visitedRooms[nextRoomNum][0]){//wenn der Startraum zum 1. mal als Nachbar auftaucht
                 this.visitedRooms[nextRoomNum][0] = nextRoom; // füge den Startraum in die liste ein
-                this.visitedRooms[nextRoomNum][1] = nextRoomNum; //Um Kreise am Anfang zu verhindern, setzte ich hier, dass er von dem vorherigen Knoten kommt.
             }//andernfalls existiert der Nachbar schon und es muss nichts geändert werden
         }
 
@@ -261,7 +260,7 @@ export class Strategy{
     }
 
     protected checkForLoopFromRoomNum(roomNum1:number, roomNum2:number):boolean{
-        if(this.visitedRooms[roomNum2][1]
+        if(this.visitedRooms[roomNum2][2] == Visited.Unvisited
             || this.visitedRooms[roomNum2][1] == roomNum1
             || this.visitedRooms[roomNum1][1] == roomNum2){
                 return true;
