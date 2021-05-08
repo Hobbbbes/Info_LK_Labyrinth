@@ -25,8 +25,6 @@ export class Strategy{
         this.visitedRooms = visitedRooms;
     }
 
-    protected abstract filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[];
-
     protected abstract orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[];
 
     public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Room{
@@ -45,13 +43,11 @@ export class Strategy{
 
         //nun lasse ich mir die liste der availableRooms anhand bestimmter Präferenzen sortieren, die von der Strategie abhängig sind. Falls Räume erst später besucht werden 
         //sollen, kann man sie aus der Liste streichen und den Raum mit dem entsprechenden VisitedStatus markieren
-        availableDirections = this.orderByPreferences(pos, Object.assign([], availableDirections), hp, ap); 
-        let filteredDirections = this.filterDirections(pos, Object.assign([], availableRooms), Object.assign([], availableDirections), hp, ap);
-        let sortedDirections = this.orderByPreferences(pos, Object.assign([], filteredDirections), hp, ap);
+        let sortedDirections = this.orderByPreferences(pos, Object.assign([], availableDirections), hp, ap);
 
         //als nächstes wird eine Direction ausgewählt. Bevorzugt werden nicht besichtigte Räume in der Reihenfolge, wie sie von der Strategie sortiert werden. 
         // Wenn aber alle zurückgegebenen Directions schon besichtigt wurden, wird die ausgewählt, die den kleinsten Visited-Status hat.
-        let nextDirection = this.getNextDirection(pos, sortedDirections, availableDirections);
+        let nextDirection = this.getNextDirection(pos, sortedDirections);
 
         //finde das geringste VisitedState aus den Nachbarräumen, die nicht zu einem Loop führen und die nicht dem Raum entsprechen, in den man als nächstes geht 
         this.calculateAndSetVisitedState(pos, availableRoomNums, nextDirection);
@@ -85,22 +81,13 @@ export class Strategy{
         this.visitedRooms[coordsToRoomNum(pos, this.breite)][2] = visitedState;
     }
 
-    private getNextDirection(pos:[number, number], sortedDirections:Direction[], availableDirections:Direction[]){
+    private getNextDirection(pos:[number, number], sortedDirections:Direction[]){
 
-        //suche einen präferierten Raum aus, der noch nicht besichtigt wurde
-        for(var d = 0; d < sortedDirections.length; d++){
-            if(this.getVisitedForDirection(pos, sortedDirections[d]) == Visited.Unvisited){
-              return sortedDirections[d];
-            }
-        }
-
-        //wenn alle präferierten umliegenden Räume besichtigt wurden, wähle den, der den geringsten visited-Status hat. Dazu zählen alle Räume, auch die nicht präferierten, 
-        //aber nur die, die in keinen Loop führen
+        //suche den Nachbarraum, mit dem geringsten Visited. Falls es mehrere gibt, nehme den ersten
         let nextDirection = null;
         let bestVisitedState = Visited.Visited_DeadEnd;
     
-        for(let d = 0; d < availableDirections.length; d++){
-            let direction = availableDirections[d];
+        for(let direction of sortedDirections){
 
             let visitedState = this.getVisitedForDirection(pos, direction);
             if(visitedState < bestVisitedState){

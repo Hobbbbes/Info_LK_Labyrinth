@@ -4,24 +4,9 @@ import {Room} from ?;
 import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
 
 export class AgressivStrategy extends Strategy{
-  
-  protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
-
-    return availableDirections.filter(direction => {
-      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), super.breite);
-      let room:Room = super.visitedRooms[roomNum][0];
-
-      if(room.monster - ap >= hp){
-        super.visitedRooms[roomNum][2] = Visited.Monster_invincible;
-        return false;
-      }
-
-      return true;
-    });
-  }
 
   public orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
-    return availableDirections.sort((a, b) => {
+    availableDirections.sort((a, b) => {
 
       let room_a = super.getRoomFromDirection(pos, a); 
       let room_b = super.getRoomFromDirection(pos, b);;
@@ -44,5 +29,15 @@ export class AgressivStrategy extends Strategy{
         return swordSort;
       }
     });
+    
+    for(let direction of availableDirections){
+      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), super.breite);
+      let room:Room = super.visitedRooms[roomNum][0];
+      
+      if(room.monster - ap >= hp){
+        super.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, super.visitedRooms[roomNum][2]);
+      }
+    }
+    return 
   }
 } 

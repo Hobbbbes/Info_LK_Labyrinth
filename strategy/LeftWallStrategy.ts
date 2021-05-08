@@ -4,10 +4,6 @@ import {Room} from ?;
 import {Direction} from "./Strategy";
 
 export class LeftWallStrategy extends Strategy{
-  
-  protected filterDirections(pos:[number, number], neighbourRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
-    return availableDirections;
-  }
 
   protected orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
     
