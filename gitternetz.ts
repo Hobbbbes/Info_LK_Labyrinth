@@ -6,16 +6,18 @@ export class GitterNetz {
   private static gitter: GitterNetz;
   hoch: number;
   breit: number;
+  sword:number
+  monster:number
   rooms: Array<[number, RoomIn]>;
   edges: Array<[number, number, boolean]>;
   ende: number
   start: number
-  private constructor(hoch: number, breit: number) {
+  private constructor(hoch: number, breit: number, monster, sword) {
     this.hoch = hoch;
     this.breit = breit;
     this.rooms = [];
     for (let i = 0; i < this.breit * this.hoch; i++) {
-      let broom = new RoomIn();
+      let broom = new RoomIn(monster, sword);
       if (i == this.coordsToRoomNum([this.ende, this.breit-1])) {
         broom.goal = true;
       }
@@ -35,9 +37,9 @@ export class GitterNetz {
     this.dfs(5)
   }
 
-  public static generateGitternetz(hoch, breit): GitterNetz {
+  public static generateGitternetz(hoch, breit, monster, sword): GitterNetz {
     if (!GitterNetz.gitter) {
-      GitterNetz.gitter = new GitterNetz(hoch, breit)
+      GitterNetz.gitter = new GitterNetz(hoch, breit, monster, sword)
     }
     return GitterNetz.gitter
   }
@@ -80,6 +82,12 @@ export class GitterNetz {
     let strB: string = "_"
     let row = strE
     let str = ""
+    let swall = "S̲"
+    let s = "S"
+    let mwall = "M̲"
+    let m = "M"
+    let bwall = "B̲"
+    let b = "B"
     for (let i = 0; i < this.breit; i++) {
       str = str.concat(strS.toString())
       str = str.concat(strB.toString())
@@ -89,9 +97,15 @@ export class GitterNetz {
     for (let i = 0; i < this.hoch * this.breit; i++) {
       let currentrow = Math.floor(i / this.breit)
       if (isElem([i, i + this.breit, false], this.edges) || i > (this.breit * (this.hoch - 1)) - 1) {
-        row = row.concat(strB.toString())
+        if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(bwall.toString())}
+        else if (this.rooms[i][1].sword > 0) {row = row.concat(swall.toString())}
+        else if (this.rooms[i][1].monsterhp > 0) {row = row.concat(mwall.toString())}
+        else { row = row.concat(strB.toString()) }
       } else {
-        row = row.concat(strS.toString())
+        if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(b.toString())}
+        else if (this.rooms[i][1].sword > 0) {row = row.concat(s.toString())}
+        else if (this.rooms[i][1].monsterhp > 0) {row = row.concat(m.toString())}
+        else { row = row.concat(strS.toString()) }
       }
       if (isElem([i, i + 1, false], this.edges)) {
         row = row.concat(strE.toString())
