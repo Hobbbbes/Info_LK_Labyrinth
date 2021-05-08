@@ -1,4 +1,4 @@
-import {Room} from ?;
+import {Room} from "../raum";
 import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
 
 export enum Direction{
@@ -16,18 +16,24 @@ export enum Visited{
     Visited_DeadEnd = 4 //path has no unvisited neighbourRooms
 }
 
-export class Strategy{
+export abstract class Strategy{
     protected breite:number;
     protected visitedRooms:[Room, number, Visited][];
   
-    constructor(breite:number, visitedRooms:[Room, number, number][]){
+    constructor(breite:number){
         this.breite = breite;
+    }
+
+    public setVisitedRooms(visitedRooms:[Room, number, number][]){
         this.visitedRooms = visitedRooms;
     }
 
     protected abstract orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[];
 
-    public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Room{
+    public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Direction{
+        //um exceptions zu verhindern und trotzdem damit arbeiten zu können, füge ich die umliegenden Räume in die visited-Liste ein. 
+        // Der Startraum wird, falls man in ihm ist, ebenfalls hinzugefügt und nach der ersten Bewegung verlinkt, um Loop, die durch den Startknoten gehen zu erkennen  
+        this.registerRooms(pos, neighbourRooms, this.getRoomNums(pos, neighbourRooms));
 
         //suche alle Nachbarräume die
         //  - nicht null sind
@@ -37,9 +43,6 @@ export class Strategy{
         let availableRoomNums = availableRoomsCoordsAndDirections[1];
         let availableDirections = availableRoomsCoordsAndDirections[2];
 
-        //um exceptions zu verhindern und trotzdem damit arbeiten zu können, füge ich die umliegenden Räume in die visited-Liste ein. 
-        // Der Startraum wird, falls man in ihm ist, ebenfalls hinzugefügt und nach der ersten Bewegung verlinkt, um Loop, die durch den Startknoten gehen zu erkennen  
-        this.registerRooms(pos, availableRooms, availableRoomNums);
 
         //nun lasse ich mir die liste der availableRooms anhand bestimmter Präferenzen sortieren, die von der Strategie abhängig sind. Falls Räume erst später besucht werden 
         //sollen, kann man sie aus der Liste streichen und den Raum mit dem entsprechenden VisitedStatus markieren
@@ -103,7 +106,7 @@ export class Strategy{
         throw new Error("Das Labyrinth ist nicht Lösbar");
     }
 
-    private registerRooms(pos:[number, number], availableNeighbourRooms:Room[], availableRoomNums:number[]){
+    private registerRooms(pos:[number, number], neighbourRooms:Room[], neighbourRoomNums:number[]){
         let roomNum = coordsToRoomNum(pos, this.breite);
 
         //wenn man am Startraum ist, initialisiere ihn mit
@@ -111,13 +114,13 @@ export class Strategy{
           this.visitedRooms[roomNum] = [null, null, Visited.Unvisited];
         }
     
-        for(let i = 0; i < availableNeighbourRooms.length; i++){
+        for(let i = 0; i < neighbourRooms.length; i++){
 
-            let nextRoom = availableNeighbourRooms[i];
-            let nextRoomNum = availableRoomNums[i];
+            let nextRoom = neighbourRooms[i];
+            let nextRoomNum = neighbourRoomNums[i];
 
             if(!this.visitedRooms[nextRoomNum]){//wenn der Nachbarraum zum 1. mal auftaucht
-                this.visitedRooms[nextRoomNum] = [nextRoomNum, null, Visited.Unvisited];
+                this.visitedRooms[nextRoomNum] = [nextRoom, null, Visited.Unvisited];
             }else if(!this.visitedRooms[nextRoomNum][0]){//wenn der Startraum zum 1. mal als Nachbar auftaucht
                 this.visitedRooms[nextRoomNum][0] = nextRoom; // füge den Startraum in die liste ein
             }//andernfalls existiert der Nachbar schon und es muss nichts geändert werden
@@ -155,6 +158,28 @@ export class Strategy{
         }
         return [availableRooms, availableRoomNums, availableDirections];
     }
+
+    private getRoomNums(pos:[number, number], rooms:Room[]):number[]{
+        let roomNums = [];
+    
+        if(rooms[0]){
+            roomNums.push(this.getRoomNumFromDirection(pos, Direction.Up));
+        }
+    
+        if(rooms[1]){
+            roomNums.push(this.getRoomNumFromDirection(pos, Direction.Right));
+        }
+    
+        if(rooms[2]){
+            roomNums.push(this.getRoomNumFromDirection(pos, Direction.Down));
+        }
+    
+        if(rooms[3]){
+            roomNums.push(this.getRoomNumFromDirection(pos, Direction.Left));
+        }
+        return roomNums;
+    }
+
 
     protected getVisitedForDirection(pos:[number, number], direction:Direction):Visited{
         let index:number = coordsToRoomNum(this.getCoordsFromDirection(pos, direction), this.breite);
@@ -210,7 +235,7 @@ export class Strategy{
     }
 
     protected getRoomFromDirection(pos:[number, number], direction):Room{
-        this.visitedRooms[this.getRoomNumFromDirection(pos, direction)][0];
+        return this.visitedRooms[this.getRoomNumFromDirection(pos, direction)][0];
     }
 
     protected getRoomNumFromDirection(pos:[number, number], direction:Direction):number{
