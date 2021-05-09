@@ -1,7 +1,7 @@
-import {Strategy, Direction, Visited} from "../strategy/Strategy";
-import {Room} from "../raum"
-import {Status} from "../status"
-import Spiel from "../spiel"
+import {Strategy, Direction, Visited} from "../strategy/Strategy.js";
+import {Room} from "../raum.js"
+import {Status} from "../status.js"
+import Spiel from "../spiel.js"
 export class Agent {
 
     private breite : number; // des labyrints

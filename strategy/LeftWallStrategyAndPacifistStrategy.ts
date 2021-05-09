@@ -1,7 +1,7 @@
 
-import {Strategy, Direction, Visited} from "./Strategy"
-import {Room} from "../raum";
-import {LeftWallStrategy} from "./LeftWallStrategy";
+import {Strategy, Direction, Visited} from "./Strategy.js"
+import {Room} from "../raum.js";
+import {LeftWallStrategy} from "./LeftWallStrategy.js";
 
 export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
   

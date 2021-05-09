@@ -1,7 +1,7 @@
 
-import {Strategy, Direction, Visited} from "./Strategy"
-import {Room} from "../raum";
-import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
+import {Strategy, Direction, Visited} from "./Strategy.js"
+import {Room} from "../raum.js";
+import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter.js";
 
 export class AgressivStrategy extends Strategy{
 

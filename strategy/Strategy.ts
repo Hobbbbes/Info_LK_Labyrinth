@@ -1,5 +1,5 @@
-import {Room} from "../raum";
-import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
+import {Room} from "../raum.js";
+import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter.js";
 
 export enum Direction{
     Up = 0,

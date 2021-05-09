@@ -1,7 +1,7 @@
 
-import {Strategy} from "./Strategy"
-import {Room} from "../raum";
-import {Direction} from "./Strategy";
+import {Strategy} from "./Strategy.js"
+import {Room} from "../raum.js";
+import {Direction} from "./Strategy.js";
 
 export class RndStrategy extends Strategy{
 
