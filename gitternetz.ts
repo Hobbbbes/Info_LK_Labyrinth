@@ -1,5 +1,6 @@
 import { isElem, isElem1, shuffle } from "./hilfsfunktionen.js"
 import { RoomIn } from "./raum.js"
+import { coordsToRoomNum } from "./utils/CoordConverter.js";
 
 
 export class GitterNetz {
@@ -16,9 +17,11 @@ export class GitterNetz {
     this.hoch = hoch;
     this.breit = breit;
     this.rooms = [];
+    this.start = Math.round(Math.random() * (this.hoch - 1))
+    this.ende = Math.round(Math.random() * this.hoch)
     for (let i = 0; i < this.breit * this.hoch; i++) {
       let broom = new RoomIn(monster, sword);
-      if (i == this.coordsToRoomNum([this.ende, this.breit-1])) {
+      if (i == this.coordsToRoomNum([this.ende+1, this.breit-1])) {
         broom.goal = true;
       }
       this.rooms.push([i, broom]);
@@ -32,8 +35,6 @@ export class GitterNetz {
         this.edges.push([i, i + this.breit, false])
       }
     }
-    this.start = Math.round(Math.random() * (this.hoch - 1))
-    this.ende = Math.round(Math.random() * this.hoch)
     this.dfs(5)
   }
 
@@ -51,7 +52,7 @@ export class GitterNetz {
   roomNumToCoords(i: number): [number, number] {
     return [(Math.floor(i / (this.breit))), i % (this.breit)]
   }
-  coordsToRoomNum([x, y]: [number, number]) {
+  coordsToRoomNum([y, x]: [number, number]) {
     return this.breit * y + x
   }
   findneighbours(i: number) {
@@ -127,3 +128,7 @@ export class GitterNetz {
     }
   }
 }
+let g = GitterNetz.generateGitternetz(10,10,10,10)
+console.log(g.roomNumToCoords(0))
+console.log(g.roomNumToCoords(20))
+console.log(g.coordsToRoomNum([2, 0]))
