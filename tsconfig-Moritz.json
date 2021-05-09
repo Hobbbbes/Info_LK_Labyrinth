@@ -1,0 +1,12 @@
+{
+  "compilerOptions": {
+    "target": "es2016",
+    "lib": [
+        "es2017",
+        "dom",
+        "scripthost"
+    ],
+      "module": "commonjs",
+      "outDir": "out"
+    }
+}
