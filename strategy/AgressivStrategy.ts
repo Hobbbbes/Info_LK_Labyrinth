@@ -1,6 +1,6 @@
 
 import {Strategy, Direction, Visited} from "./Strategy"
-import {Room} from ?;
+import {Room} from "../raum";
 import {roomNumToCoords, coordsToRoomNum} from "../utils/CoordConverter";
 
 export class AgressivStrategy extends Strategy{

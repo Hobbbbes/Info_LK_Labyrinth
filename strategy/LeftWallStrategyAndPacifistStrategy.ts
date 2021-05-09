@@ -1,6 +1,6 @@
 
 import {Strategy, Direction, Visited} from "./Strategy"
-import {Room} from ?;
+import {Room} from "../raum";
 import {LeftWallStrategy} from "./LeftWallStrategy";
 
 export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
