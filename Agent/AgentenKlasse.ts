@@ -1,5 +1,7 @@
 import {Strategy, Direction, Visited} from "../strategy/Strategy";
-
+import {Room} from "../raum"
+import {Status} from "../status"
+import Spiel from "../spiel"
 export class Agent {
 
     private breite : number; // des labyrints
@@ -9,13 +11,13 @@ export class Agent {
 
     private id: number; 
 
-    private g: laby;
+    private g: Spiel;
 
     private visited: Array<[Room, number, Visited]>;
 
     private s: Strategy;
 
-    constructor(id:number, breite: number, hohe: number, g: laby, s: Strategy ){
+    constructor(id:number, breite: number, hohe: number, g: Spiel, s: Strategy ){
       this.breite = breite;
       this.hohe = hohe;
       let n = breite * hohe;
@@ -40,13 +42,13 @@ export class Agent {
 
     step() : boolean
     {
-      this.status = this.g.getStatus();
+      this.status = this.g.getStatus(this.id);
 
       if(this.status.hp > 0 && !this.checkAllVisited() && !this.status.finish){
         //Abbruchbedingungen tod, ausgang erreicht, all visited
-        let neighbours = this.g.neighbours(this.status.pos, this.id); // get neighbours from laby
+        let neighbours = this.g.neighbours(this.id); // get neighbours from laby
 
-        let direction = this.s.getNextRoom(this.status.pos, neighbours, status.hp, status.ap);
+        let direction = this.s.getNextRoom(this.status.Pos, neighbours, this.status.HP, this.status.SwordStrenght);
 
         if(direction != null){
             this.g.move(direction, this.id);

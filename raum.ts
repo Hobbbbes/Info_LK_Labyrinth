@@ -1,15 +1,22 @@
 export class Room {
   monster: number;
+  
+  public get Monster() : number {
+    return this.monster;
+  }
+  
   sword: number;
+
+  public get Sword() : number{
+    return this.sword;
+  }
   isGoal: boolean;
   constructor(monsterhp: number, weaponhp: number, goal: boolean) {
     this.monster = monsterhp;
     this.sword = weaponhp;
     this.isGoal = goal;
   }
-  getMonster() { return this.monster; }
-  getSword() { return this.sword; }
-  getIsGoal() { return this.isGoal; }
+
 }
 
 export class RoomIn {
