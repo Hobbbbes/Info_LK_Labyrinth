@@ -12,8 +12,6 @@ export class AgressivStrategy extends Strategy{
       let room_b = super.getRoomFromDirection(pos, b);;
       let lastDIrection = super.getDirectionToRoomBeforeFromCoords(pos);
       let directionSort = a == lastDIrection ? 1 :( b == lastDIrection ? -1 : (a - b));
-      //console.log(lastDIrection);
-      //console.log(a + "  b:" + b + "   sort:" + directionSort);
       let monsterSort = room_a.monster - room_b.monster;
       let swordSort = room_b.sword - room_a.sword;
 
@@ -27,14 +25,11 @@ export class AgressivStrategy extends Strategy{
 
       if(swordSort == 0){
         if(monsterSort == 0){
-          //console.log("dirSort: " + directionSort);
           return directionSort;
         }else{
-          //console.log("monstsort: " + monsterSort + " a:" + room_a.monster + " b:" + room_b.monster);
           return monsterSort;
         }
       }else{
-        //console.log("swordSort: " + swordSort + " a:" + room_a.sword + " b:" + room_b.sword);
         return swordSort;
       }
     });

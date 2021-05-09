@@ -31,11 +31,6 @@ export abstract class Strategy{
     protected abstract orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[];
 
     public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Direction{
-        //console.log("asdas")
-        //console.log(pos)
-        //console.log(coordsToRoomNum(pos, this.breite));
-        //console.log(neighbourRooms);
-
 
         //um exceptions zu verhindern und trotzdem damit arbeiten zu können, füge ich die umliegenden Räume in die visited-Liste ein. 
         // Der Startraum wird, falls man in ihm ist, ebenfalls hinzugefügt und nach der ersten Bewegung verlinkt, um Loop, die durch den Startknoten gehen zu erkennen  
@@ -48,12 +43,10 @@ export abstract class Strategy{
         let availableRooms = availableRoomsCoordsAndDirections[0];
         let availableRoomNums = availableRoomsCoordsAndDirections[1];
         let availableDirections = availableRoomsCoordsAndDirections[2];
-        console.log(availableDirections);
         
         //nun lasse ich mir die liste der availableRooms anhand bestimmter Präferenzen sortieren, die von der Strategie abhängig sind. Falls Räume erst später besucht werden 
         //sollen, kann man sie aus der Liste streichen und den Raum mit dem entsprechenden VisitedStatus markieren
         let sortedDirections = this.orderByPreferences(pos, Object.assign([], availableDirections), hp, ap);
-        //console.log(sortedDirections);
         
         //als nächstes wird eine Direction ausgewählt. Bevorzugt werden nicht besichtigte Räume in der Reihenfolge, wie sie von der Strategie sortiert werden. 
         // Wenn aber alle zurückgegebenen Directions schon besichtigt wurden, wird die ausgewählt, die den kleinsten Visited-Status hat.
@@ -64,8 +57,6 @@ export abstract class Strategy{
         
         // wenn wir den neuen Raum zum ersten mal betreten, setzte sein lastroom auf den alten
         this.setLastRoom(pos, nextDirection);
-        
-        console.log("nextDirection: " + nextDirection)
 
         return nextDirection;
     }
@@ -112,9 +103,6 @@ export abstract class Strategy{
             return nextDirection;
         }
 
-        //console.log(this.visitedRooms);
-        //console.log(sortedDirections);
-        //console.log(pos);
         throw new Error("Das Labyrinth ist nicht Lösbar");
     }
 
@@ -289,12 +277,10 @@ export abstract class Strategy{
 
     protected getDirectionFromRoomNum(roomNum1:number, roomNum2:number):Direction{
         let a = this.getDirectionFromCoords(roomNumToCoords(roomNum1, this.breite), roomNumToCoords(roomNum2, this.breite));
-        //console.log(a);
         return a;
     }
 
     protected getDirectionFromCoords(pos1:[number, number], pos2:[number, number]):Direction{
-        //console.log(pos1 + "   pos2:" + pos2);
         if(pos1[0] == pos2[0] && pos1[1]+1 == pos2[1]){
                 return Direction.Right;
             }else if(pos1[0] == pos2[0] && pos1[1]-1 == pos2[1]){

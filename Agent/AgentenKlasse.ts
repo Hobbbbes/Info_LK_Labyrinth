@@ -16,7 +16,7 @@ export class Agent {
 
     private visited: Array<[Room, number, Visited]>;
 
-    s: Strategy;
+    private s: Strategy;
 
     constructor(id:number, breite: number, hohe: number, g: Spiel, s: Strategy ){
       this.breite = breite;

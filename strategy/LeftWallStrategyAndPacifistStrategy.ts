@@ -16,8 +16,6 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
     if(lastDirection != null){
       lastDirInd = availableDirections.indexOf(lastDirection);
     }
-    //console.log("lastDir:" + lastDirection);
-    //console.log("lastDirInd:" + lastDirInd);
     
     let directions:Direction[] = [];
     for(var i = 1; i <= availableDirections.length; i++){

@@ -73,9 +73,6 @@ export default class Spiel {
         }
         player[1] -= this.g.rooms[next_room][1].monsterhp  // wird vom monster geboxt 
       }
-    }else{
-      console.log(i);
-      console.log(this.g.rooms[i][1].goal);
     }
   }
 
