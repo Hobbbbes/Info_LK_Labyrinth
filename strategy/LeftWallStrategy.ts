@@ -4,8 +4,8 @@ import {Room} from ?;
 import {Direction} from "./Strategy";
 
 export class LeftWallStrategy extends Strategy{
-  
-  public orderByPreferences(pos:[number, number], availableRooms:Room[], availableDirections:Direction[], hp:number, ap:number):Direction[]{
+
+  protected orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[]{
     
     //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
     availableDirections.sort((a, b) => a - b);
