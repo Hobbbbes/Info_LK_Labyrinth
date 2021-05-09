@@ -23,6 +23,7 @@ var pRun = new Player("sprites/adventurer-run-",document,270,170,4)
 
 var S = new Spiel(20,20,1,1)
 var A = new Agent(S.createAgent(),20,20,S,new LeftWallStrategy(20));
+A.step();
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   right.draw();

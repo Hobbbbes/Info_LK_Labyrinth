@@ -18,7 +18,7 @@ export enum Visited{
 
 export abstract class Strategy{
     protected breite:number;
-    protected visitedRooms:[Room, number, Visited][];
+    protected visitedRooms:[Room, number, Visited][] = new Array<[Room, number, Visited]>();
   
     constructor(breite:number){
         this.breite = breite;
