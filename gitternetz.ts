@@ -18,7 +18,7 @@ export class GitterNetz {
     this.breit = breit;
     this.rooms = [];
     this.start = Math.round(Math.random() * (this.hoch - 1))
-    this.ende = Math.round(Math.random() * this.hoch - 1)
+    this.ende = Math.round(Math.random() * (this.hoch - 1))
     for (let i = 0; i < this.breit * this.hoch; i++) {
       let broom = new RoomIn(monster, sword);
       if (i == this.coordsToRoomNum([this.ende, this.breit-1])) {
@@ -119,11 +119,11 @@ export class GitterNetz {
       }
       if ((i + 1) % this.breit === 0) {
         row = row.substring(0, row.length - 1)
-        if (!(currentrow === this.ende-1)) {
+        if (!(currentrow === this.ende)) {
           row = row.concat(strE.toString())
         }
         console.log(row)
-        if (currentrow === this.start) {
+        if (currentrow === this.start-1) {
           row = " "
         } else {
           row = "|"
