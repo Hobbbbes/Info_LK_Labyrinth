@@ -10,13 +10,17 @@ export class AgressivStrategy extends Strategy{
 
       let room_a = super.getRoomFromDirection(pos, a); 
       let room_b = super.getRoomFromDirection(pos, b);;
-      
-      let directionSort = a - b;
-      let monsterSort = room_b.monster - room_a.monster;
-      let swordSort = room_a.sword - room_b.sword;
+      let lastDIrection = super.getDirectionToRoomBeforeFromCoords(pos);
+      let directionSort = a == lastDIrection ? 1 :( b == lastDIrection ? -1 : (a - b));
+      let monsterSort = room_a.monster - room_b.monster;
+      let swordSort = room_b.sword - room_a.sword;
 
       if(room_a.sword <= ap && room_b.sword <= ap){
         swordSort = 0;
+      }
+
+      if(room_a.monster == 0 || room_b.monster == 0){
+        monsterSort = 0;
       }
 
       if(swordSort == 0){
@@ -31,13 +35,13 @@ export class AgressivStrategy extends Strategy{
     });
     
     for(let direction of availableDirections){
-      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), super.breite);
-      let room:Room = super.visitedRooms[roomNum][0];
+      let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), this.breite);
+      let room:Room = this.visitedRooms[roomNum][0];
       
       if(room.monster - ap >= hp){
-        super.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, super.visitedRooms[roomNum][2]);
+        this.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, this.visitedRooms[roomNum][2]);
       }
     }
-    return 
+    return availableDirections;
   }
 } 

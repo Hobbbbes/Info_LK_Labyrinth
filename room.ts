@@ -1,5 +1,4 @@
 
-
 export default class Room_Draw{
     private hasSword : boolean;
     private hasMonster : boolean;

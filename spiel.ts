@@ -2,14 +2,8 @@ import { isElem } from "./hilfsfunktionen.js"
 import { Status } from "./status.js"
 import { RoomIn, Room } from "./raum.js"
 import { GitterNetz } from "./gitternetz.js"
-
-
-enum Direction {
-  Up,
-  Down,
-  Left,
-  Right
-}
+import { Direction} from "./strategy/Strategy.js"
+import { coordsToRoomNum, roomNumToCoords } from "./utils/CoordConverter.js"
 
 export default class Spiel {
   private agents: [number, number, number][]; // [[raumIndex, HP, attackDMG], ...]
@@ -22,10 +16,10 @@ export default class Spiel {
     this.agents = []
     this.current_agent = -1
     this.g = GitterNetz.generateGitternetz(hoch, breit, monster, sword)
-    this.g.show()
+    this.g.show(-1);
   }
   createAgent(): number {
-    this.agents.push([this.g.coordsToRoomNum([this.g.start+1, 0]), 30, 3])
+    this.agents.push([coordsToRoomNum([this.g.start+1, 0], this.g.breit), 30, 3])
     this.current_agent++
     return this.current_agent
   }
@@ -64,7 +58,7 @@ export default class Spiel {
         direction_to_check = 3;
         next_room = i - 1;
       }
-      if (this.neighbours(id)[direction_to_check]) {
+      if (this.neighbours(id)[direction_to_check] != null) {
         player[0] = next_room // Betritt nächsten Raum
         player[2] = player[2] + this.g.rooms[next_room][1].sword // Sammelt Schwert auf
         this.g.rooms[next_room][1].sword = 0
@@ -85,9 +79,13 @@ export default class Spiel {
   getStatus(id: number): Status {
     let player = this.agents[id]
     let isFinish = false
-    if (player[0] === (this.g.breit * this.g.ende) - 1) {
+    if (player[0] == coordsToRoomNum([this.g.ende, this.g.breit-1], this.g.breit)) {
       isFinish = true
     }
-    return new Status(this.g.roomNumToCoords(player[0]), player[1], player[2], isFinish)
+    return new Status(roomNumToCoords(player[0], this.g.breit), player[1], player[2], isFinish)
+  }
+
+  show(){
+    this.g.show(this.agents[this.current_agent][0]);
   }
 }

@@ -1,5 +1,3 @@
-
-
 export class Status {
   
   room:[number, number]

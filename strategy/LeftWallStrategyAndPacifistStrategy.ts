@@ -1,7 +1,6 @@
 
 import {Strategy, Direction, Visited} from "./Strategy.js"
 import {Room} from "../raum.js";
-import {LeftWallStrategy} from "./LeftWallStrategy.js";
 
 export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
   
@@ -12,9 +11,9 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
     
     let lastDirection;
     let lastDirInd = -1;
-
+    
     lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
-    if(lastDirection){
+    if(lastDirection != null){
       lastDirInd = availableDirections.indexOf(lastDirection);
     }
     
@@ -25,13 +24,13 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
 
     for(let direction of availableDirections) {
       let roomNum = super.getRoomNumFromDirection(pos, direction);
-      let room:Room = super.visitedRooms[roomNum][0];
+      let room:Room = this.visitedRooms[roomNum][0];
 
-      if(room.Monster > 0){
-        if(room.Monster - ap >= hp){
-          super.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, super.visitedRooms[roomNum][2]);
+      if(room.monster > 0){
+        if(room.monster - ap >= hp){
+          this.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, this.visitedRooms[roomNum][2]);
         }else{
-          super.visitedRooms[roomNum][2] = Math.max(Visited.Monster, super.visitedRooms[roomNum][2]);
+          this.visitedRooms[roomNum][2] = Math.max(Visited.Monster, this.visitedRooms[roomNum][2]);
         }
       }
     }

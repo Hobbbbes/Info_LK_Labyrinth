@@ -4,5 +4,5 @@ export let roomNumToCoords = function(i:number, breit:number):[number, number] {
 }
 
 export let coordsToRoomNum = function ([x,y]:[number,number], breit:number) {
-      return breit*y+x
+      return breit*x+y
 }

@@ -18,10 +18,10 @@ export class GitterNetz {
     this.breit = breit;
     this.rooms = [];
     this.start = Math.round(Math.random() * (this.hoch - 1))
-    this.ende = Math.round(Math.random() * this.hoch)
+    this.ende = Math.round(Math.random() * this.hoch - 1)
     for (let i = 0; i < this.breit * this.hoch; i++) {
       let broom = new RoomIn(monster, sword);
-      if (i == this.coordsToRoomNum([this.ende+1, this.breit-1])) {
+      if (i == this.coordsToRoomNum([this.ende, this.breit-1])) {
         broom.goal = true;
       }
       this.rooms.push([i, broom]);
@@ -52,8 +52,8 @@ export class GitterNetz {
   roomNumToCoords(i: number): [number, number] {
     return [(Math.floor(i / (this.breit))), i % (this.breit)]
   }
-  coordsToRoomNum([y, x]: [number, number]) {
-    return this.breit * y + x
+  coordsToRoomNum([x, y]: [number, number]) {
+    return this.breit * x + y
   }
   findneighbours(i: number) {
     let raumliste: number[] = []
@@ -77,7 +77,7 @@ export class GitterNetz {
       }
     }
   }
-  show() {
+  show(agentPos:number) {
     let strE: string = "|"
     let strS: string = " "
     let strB: string = "_"
@@ -89,6 +89,8 @@ export class GitterNetz {
     let m = "M"
     let bwall = "B̲"
     let b = "B"
+    let awall = "̲A"
+    let a = "A"
     for (let i = 0; i < this.breit; i++) {
       str = str.concat(strS.toString())
       str = str.concat(strB.toString())
@@ -98,12 +100,14 @@ export class GitterNetz {
     for (let i = 0; i < this.hoch * this.breit; i++) {
       let currentrow = Math.floor(i / this.breit)
       if (isElem([i, i + this.breit, false], this.edges) || i > (this.breit * (this.hoch - 1)) - 1) {
-        if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(bwall.toString())}
+        if (i == agentPos) {row = row.concat(awall.toString())}
+        else if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(bwall.toString())}
         else if (this.rooms[i][1].sword > 0) {row = row.concat(swall.toString())}
         else if (this.rooms[i][1].monsterhp > 0) {row = row.concat(mwall.toString())}
         else { row = row.concat(strB.toString()) }
       } else {
-        if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(b.toString())}
+        if (i == agentPos) {row = row.concat(a.toString())}
+        else if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0) {row = row.concat(b.toString())}
         else if (this.rooms[i][1].sword > 0) {row = row.concat(s.toString())}
         else if (this.rooms[i][1].monsterhp > 0) {row = row.concat(m.toString())}
         else { row = row.concat(strS.toString()) }

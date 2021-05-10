@@ -25,12 +25,8 @@ export class Agent {
       this.g = g;
       this.id = id;
       this.s = s;
+      s.setVisitedRooms(this.visited);
     }
-
-    /*public getaktuell(): number
-    {
-        return this.status; 
-    }*/
 
    private checkAllVisited(): boolean{
      for (let i = 0; i < this.visited.length; i ++)
@@ -59,24 +55,4 @@ export class Agent {
     return false
 
     }
-
-/*
-            var nextroomkoord1 : number = status.pos[0];
-            var nextroomkoord2 : number = status.pos[1];
-
-            if(direction == Direction.Up) {
-                nextroomkoord2 ++;
-            }
-            if(direction == Direction.Down) {
-                nextroomkoord2 --;
-            }
-            if(direction == Direction.Right) {
-                nextroomkoord1 ++;
-            }
-            if(direction == Direction.Left) {
-                nextroomkoord1 --;
-            }
-*/
-            //this.visited[coordsToRoomNum([nextroomkoord1, nextroomkoord2], this.breite)] = coordsToRoomNum(this.status.pos, this.breite);
-
-} /*abstract strategy(): number;*/
+}

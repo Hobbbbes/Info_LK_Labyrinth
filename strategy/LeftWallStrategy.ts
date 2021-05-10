@@ -1,7 +1,5 @@
 
-import {Strategy} from "./Strategy.js"
-import {Room} from "../raum.js";
-import {Direction} from "./Strategy.js";
+import {Strategy, Direction} from "./Strategy.js"
 
 export class LeftWallStrategy extends Strategy{
 
@@ -14,7 +12,7 @@ export class LeftWallStrategy extends Strategy{
     let lastDirInd = -1;
 
     lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
-    if(lastDirection){
+    if(lastDirection != null){
       lastDirInd = availableDirections.indexOf(lastDirection);
     }
     
