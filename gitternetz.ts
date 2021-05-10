@@ -119,7 +119,7 @@ export class GitterNetz {
       }
       if ((i + 1) % this.breit === 0) {
         row = row.substring(0, row.length - 1)
-        if (!(currentrow === this.ende)) {
+        if (!(currentrow === this.ende-1)) {
           row = row.concat(strE.toString())
         }
         console.log(row)
@@ -132,7 +132,3 @@ export class GitterNetz {
     }
   }
 }
-let g = GitterNetz.generateGitternetz(10,10,10,10)
-console.log(g.roomNumToCoords(0))
-console.log(g.roomNumToCoords(20))
-console.log(g.coordsToRoomNum([2, 0]))
