@@ -1,5 +1,6 @@
 
 import {Strategy, Direction} from "./Strategy.js"
+import {coordsToRoomNum} from "../utils/CoordConverter.js"
 
 export class LeftWallStrategy extends Strategy{
 
@@ -8,10 +9,8 @@ export class LeftWallStrategy extends Strategy{
     //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
     availableDirections.sort((a, b) => a - b);
     
-    let lastDirection;
     let lastDirInd = -1;
-
-    lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
+    let lastDirection = super.getDirectionToLastVisitedRoom();
     if(lastDirection != null){
       lastDirInd = availableDirections.indexOf(lastDirection);
     }

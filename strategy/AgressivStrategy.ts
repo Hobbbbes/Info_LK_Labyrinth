@@ -10,7 +10,7 @@ export class AgressivStrategy extends Strategy{
 
       let room_a = super.getRoomFromDirection(pos, a); 
       let room_b = super.getRoomFromDirection(pos, b);;
-      let lastDIrection = super.getDirectionToRoomBeforeFromCoords(pos);
+      let lastDIrection = super.getDirectionToLastVisitedRoom();
       let directionSort = a == lastDIrection ? 1 :( b == lastDIrection ? -1 : (a - b));
       let monsterSort = room_a.monster - room_b.monster;
       let swordSort = room_b.sword - room_a.sword;
@@ -38,7 +38,7 @@ export class AgressivStrategy extends Strategy{
       let roomNum = coordsToRoomNum(super.getCoordsFromDirection(pos, direction), this.breite);
       let room:Room = this.visitedRooms[roomNum][0];
       
-      if(room.monster - ap >= hp){
+      if(room.monster - ap >= hp && room.monster - room.sword >= hp){
         this.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, this.visitedRooms[roomNum][2]);
       }
     }

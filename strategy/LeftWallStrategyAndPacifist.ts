@@ -1,6 +1,7 @@
 
 import {Strategy, Direction, Visited} from "./Strategy.js"
 import {Room} from "../raum.js";
+import { coordsToRoomNum } from "../utils/CoordConverter.js";
 
 export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
   
@@ -9,10 +10,8 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
     //sollte schon sortiert sein, aber falls sich die reihenfolge ändert, würde es sonst nicht mehr funktionieren
     availableDirections.sort((a, b) => a - b);
     
-    let lastDirection;
     let lastDirInd = -1;
-    
-    lastDirection = super.getDirectionToRoomBeforeFromCoords(pos);
+    let lastDirection = super.getDirectionToLastVisitedRoom();
     if(lastDirection != null){
       lastDirInd = availableDirections.indexOf(lastDirection);
     }
@@ -27,7 +26,7 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
       let room:Room = this.visitedRooms[roomNum][0];
 
       if(room.monster > 0){
-        if(room.monster - ap >= hp){
+        if(room.monster - ap >= hp && room.monster - room.sword >= hp){
           this.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, this.visitedRooms[roomNum][2]);
         }else{
           this.visitedRooms[roomNum][2] = Math.max(Visited.Monster, this.visitedRooms[roomNum][2]);
