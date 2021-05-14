@@ -40,7 +40,7 @@ export class Agent {
    }
 
 
-    step() : boolean
+    step() : boolean | Direction
     {
       this.status = this.g.getStatus(this.id);
 
@@ -52,7 +52,7 @@ export class Agent {
 
         if(direction != null){
             this.g.move(direction, this.id);
-            return true;
+            return direction
         }
       }
 

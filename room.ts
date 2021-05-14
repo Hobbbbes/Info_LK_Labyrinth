@@ -4,8 +4,8 @@ export default class Room_Draw{
     private hasMonster : boolean;
     public fight : boolean = false;
     private MonsterFrameNumber : number;
-    private x : number;
-    private y : number;
+    public x : number;
+    public y : number;
     private isOpen : number; //Closed, Left,Down,Right,Up
     private static wallSprite : HTMLImageElement;
     private static swordSprite : HTMLImageElement;
@@ -41,19 +41,19 @@ export default class Room_Draw{
         for(var x = this.x - 50; x <= this.x + 50; x+=25){
             Room_Draw.ctx.drawImage(Room_Draw.wallSprite, x, this.y + 50,25,25);
             Room_Draw.ctx.drawImage(Room_Draw.wallSprite, x, this.y - 50,25,25);
-            if(this.isOpen == 2){
+            if(this.isOpen === 1){
                 Room_Draw.ctx.fillRect( x, this.y + 50,25,25);
-            } else if(this.isOpen == 4){
+            } else if(this.isOpen === 3){
                 Room_Draw.ctx.fillRect( x, this.y - 50,25,25);
             }
         }
         for(var y = this.y - 50; y <= this.y + 50; y+=25){
             Room_Draw.ctx.drawImage(Room_Draw.wallSprite, this.x + 50, y,25,25);
             Room_Draw.ctx.drawImage(Room_Draw.wallSprite, this.x - 50, y,25,25);
-            if(this.isOpen == 1){
+            if(this.isOpen === 4){
                 Room_Draw.ctx.fillRect( this.x + 50, y,25,25);
-            } else if(this.isOpen == 3){
-                Room_Draw.ctx.fillRect( this.x + 50, y,25,25);
+            } else if(this.isOpen === 2){
+                Room_Draw.ctx.fillRect( this.x - 50, y,25,25);
             }
         }
         if (this.hasMonster && !this.fight){
