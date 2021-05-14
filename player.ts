@@ -8,7 +8,7 @@ export default class Player{
     static setContext(ctx : CanvasRenderingContext2D){
         this.ctx = ctx;
     }
-    constructor(path : string, document : Document, x: number,y: number, maxFrames : number){
+    constructor(path : string, x: number,y: number, maxFrames : number){
         this.x = x;
         this.y = y;
         this.frameNumber = 0;

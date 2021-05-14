@@ -11,6 +11,10 @@ export class Agent {
 
     private id: number; 
 
+    public get ID() : number{
+      return this.id;
+    }
+
     private g: Spiel;
 
     private visited: Array<[Room, number, Visited]>;
