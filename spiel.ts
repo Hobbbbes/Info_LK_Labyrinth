@@ -19,7 +19,7 @@ export default class Spiel {
     this.g.show(-1);
   }
   createAgent(): number {
-    this.agents.push([coordsToRoomNum([this.g.start+1, 0], this.g.breit), 30, 3])
+    this.agents.push([coordsToRoomNum([this.g.start, 0], this.g.breit), 30, 3])
     this.current_agent++
     return this.current_agent
   }
