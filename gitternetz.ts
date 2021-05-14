@@ -81,7 +81,13 @@ export class GitterNetz {
     let strE: string = "|"
     let strS: string = " "
     let strB: string = "_"
-    let row = strE
+    let row;
+    
+    if (0 == this.start) {
+      row = " "
+    } else {
+      row = "|"
+    }
     let str = ""
     let swall = "S̲"
     let s = "S"

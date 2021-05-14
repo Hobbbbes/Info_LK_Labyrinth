@@ -18,6 +18,7 @@ export enum Visited{
 
 export abstract class Strategy{
     protected breite:number;
+    public lastRoomNums:number[] = [];
     protected visitedRooms:[Room, number, Visited][] = new Array<[Room, number, Visited]>();
   
     constructor(breite:number){
@@ -31,6 +32,11 @@ export abstract class Strategy{
     protected abstract orderByPreferences(pos:[number, number], availableDirections:Direction[], hp:number, ap:number):Direction[];
 
     public getNextRoom(pos:[number, number], neighbourRooms:Room[], hp:number, ap:number):Direction{
+        //speichere zu analyseZwecken den Weg ab
+        if(this.lastRoomNums[this.lastRoomNums.length-1] != coordsToRoomNum(pos, this.breite)){ //wenn du in einem neuen raum bist
+            this.lastRoomNums.push(coordsToRoomNum(pos, this.breite));
+        }
+
         //um exceptions zu verhindern und trotzdem damit arbeiten zu können, füge ich die umliegenden Räume in die visited-Liste ein. 
         // Der Startraum wird, falls man in ihm ist, ebenfalls hinzugefügt und nach der ersten Bewegung verlinkt, um Loop, die durch den Startknoten gehen zu erkennen  
         this.registerRooms(pos, neighbourRooms, this.getRoomNums(pos, neighbourRooms));
@@ -56,7 +62,6 @@ export abstract class Strategy{
         
         // wenn wir den neuen Raum zum ersten mal betreten, setzte sein lastroom auf den alten
         this.setLastRoom(pos, nextDirection);
-
         return nextDirection;
     }
 
@@ -192,6 +197,22 @@ export abstract class Strategy{
         return roomNums;
     }
 
+    protected getDirectionToLastVisitedRoom():Direction{
+        let lastRoomNum = this.getLastVisitedRoomNum();
+        if(lastRoomNum != null){
+          return this.getDirectionFromRoomNum(this.lastRoomNums[this.lastRoomNums.length-1], lastRoomNum);
+        }else{
+            return null;
+        }
+    }
+
+    protected getLastVisitedRoomNum():number{
+        if(this.lastRoomNums.length > 1){
+            return this.lastRoomNums[this.lastRoomNums.length-2];
+        }else{
+            return null;
+        }
+    }
 
     protected getVisitedForDirection(pos:[number, number], direction:Direction):Visited{
         let index:number = coordsToRoomNum(this.getCoordsFromDirection(pos, direction), this.breite);
@@ -275,8 +296,7 @@ export abstract class Strategy{
     }
 
     protected getDirectionFromRoomNum(roomNum1:number, roomNum2:number):Direction{
-        let a = this.getDirectionFromCoords(roomNumToCoords(roomNum1, this.breite), roomNumToCoords(roomNum2, this.breite));
-        return a;
+        return this.getDirectionFromCoords(roomNumToCoords(roomNum1, this.breite), roomNumToCoords(roomNum2, this.breite));
     }
 
     protected getDirectionFromCoords(pos1:[number, number], pos2:[number, number]):Direction{

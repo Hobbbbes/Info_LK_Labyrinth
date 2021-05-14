@@ -4,7 +4,7 @@ import {Agent} from "./Agent/AgentenKlasse.js"
 import Spiel from "./spiel.js"
 import {LeftWallStrategy} from "./strategy/LeftWallStrategy.js"
 import {AgressivStrategy} from "./strategy/AgressivStrategy.js"
-import {LeftWallStrategyAndMostlyPacifistStrategy} from "./strategy/LeftWallStrategyAndPacifistStrategy.js"
+import {LeftWallStrategyAndMostlyPacifistStrategy} from "./strategy/LeftWallStrategyAndPacifist.js"
 import {RndStrategy} from "./strategy/RndStrategy.js"
 
 
