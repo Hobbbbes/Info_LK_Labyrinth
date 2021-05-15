@@ -8,12 +8,20 @@
   </head>
   <body>
     <button type="new_player">New Player</button>
+    <label for="strategy">Choose the strategy of the new Player</label>
+    <select name="strategy" id="strategy">
+      <option value="Agressiv">Agressiv</option>
+      <option value="LeftWall">Left Wall</option>
+      <option value="LeftWallPacifist">Left Wall and Pacifist</option>
+      <option value="Rnd">Random</option>
+    </select>
     <script src="out/index.js" type="module"></script>
     <p id="1">
       <canvas id="1"></canvas>
       <button type="step">Step</button>
-      <p id="1.1">HP: 0 
-          Sword: 0</p>
+      <p id="1.1">HP:  
+          Sword: </p>
+      <p id = "1.2">x: y: </p>
     </p>
   </body>
 </html>
