@@ -14,6 +14,7 @@ const canvas = document.querySelector('canvas[id="1"') as HTMLCanvasElement;
 const stats = document.getElementById("1.1") as HTMLParagraphElement;
 const StrategySelect = document.getElementById("strategy") as HTMLSelectElement;
 const coordParagraph = document.getElementById("1.2") as HTMLParagraphElement;
+let autorunLever = document.getElementById('autorun');
 canvas.width = 600;
 canvas.height = 600;
 const ctx = canvas.getContext("2d");
@@ -35,6 +36,7 @@ var down = new Room_Draw(false,true,300,300);
 var p = new Player("sprites/adventurer-idle-",270,170,3);
 var pAttack = new Player("sprites/adventurer-attack1-",270,170,4);
 var pRun = new Player("sprites/adventurer-run-",270,170,4)
+var autorun = false;
 
 var S = new Spiel(50,50,20,20)
 var A : Agent
@@ -44,7 +46,7 @@ setInterval(() => {
   middle.draw();
   right.draw();
   left.draw();
-
+  
   up.draw();
   down.draw();
   agentToRender.draw();
@@ -97,7 +99,7 @@ function Step(){
   agentToRender = pRun;
   dir = dir as Direction
   for(var i : number = 0; i<100;i++){
-
+    
     setTimeout(() => {
       if (dir === Direction.Down){
         pRun.y += 1;
@@ -115,9 +117,14 @@ function Step(){
     pRun.y = startY
     agentToRender = p
     NewNeigbours();
+    
+    if(autorun){
+      setTimeout(() => {
+        Step();
+      }, 500);
+    }
 
   },16*100)
-
 }
 
 function newPlayer(){
@@ -134,5 +141,9 @@ function newPlayer(){
   A = new Agent(S.createAgent(),50,50,S,strategy);
   NewNeigbours();
 }
+
+autorunLever.addEventListener('change',function(){
+  autorun = !autorun;
+});
 document.querySelector('button[type=step]',).addEventListener('click',Step)
 document.querySelector('button[type=new_player]',).addEventListener('click',newPlayer)
