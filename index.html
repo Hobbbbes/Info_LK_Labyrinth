@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="switch.css">
     <title>Labyrinth</title>
   </head>
   <body>
@@ -19,9 +20,18 @@
     <p id="1">
       <canvas id="1"></canvas>
       <button type="step">Step</button>
+        <div>
+          automatisch laufen:
+            <label class="switch">
+              <input id = "autorun" type="checkbox" checked>
+              <span class="slider round"></span>
+            </label>
+        </div>
       <p id="1.1">HP:  
           Sword: </p>
       <p id = "1.2">x: y: </p>
     </p>
+    
+
   </body>
 </html>
