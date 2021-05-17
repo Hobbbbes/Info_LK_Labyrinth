@@ -9,11 +9,14 @@ import {RndStrategy} from "./strategy/RndStrategy.js"
 import { Direction, Strategy } from "./strategy/Strategy.js";
 import { Room } from "./raum.js";
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
 
 const canvas = document.querySelector('canvas[id="1"') as HTMLCanvasElement;
 const stats = document.getElementById("1.1") as HTMLParagraphElement;
 const StrategySelect = document.getElementById("strategy") as HTMLSelectElement;
 const coordParagraph = document.getElementById("1.2") as HTMLParagraphElement;
+let autorunLever = document.getElementById('autorun');
 canvas.width = 600;
 canvas.height = 600;
 const ctx = canvas.getContext("2d");
@@ -35,16 +38,42 @@ var down = new Room_Draw(false,true,300,300);
 var p = new Player("sprites/adventurer-idle-",270,170,3);
 var pAttack = new Player("sprites/adventurer-attack1-",270,170,4);
 var pRun = new Player("sprites/adventurer-run-",270,170,4)
+var autorun = false;
 
-var S = new Spiel(50,50,20,20)
+var breite:number = parseInt(urlParams.get("breite"), 10);
+var höhe = parseInt(urlParams.get("höhe"), 10);
+var monster = parseInt(urlParams.get("monster"), 10);
+var sword = parseInt(urlParams.get("sword"), 10);
+
+//setzte defaultwerte, falls keine parameter übergeben wurden
+if(isNaN(breite)){
+  breite = 20;
+}
+
+if(isNaN(höhe)){
+  höhe = 20;
+}
+
+if(isNaN(monster)){
+  monster = 20;
+}
+
+if(isNaN(sword)){
+  sword = 20;
+}
+
+console.log("h: " + höhe);
+
+var S = new Spiel(höhe, breite, monster, sword)
 var A : Agent
+
 var agentToRender = p;
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
   middle.draw();
   right.draw();
   left.draw();
-
+  
   up.draw();
   down.draw();
   agentToRender.draw();
@@ -78,26 +107,21 @@ function NewNeigbours(){
   } else {
     left = new Room_Draw(false,false,left.x,left.y)
   }
-  var stat = S.getStatus(A.ID)
-  stats.innerText = "HP: " + stat.HP + "     SwordStrenght: " + stat.SwordStrenght;
-  coordParagraph.innerText = "x: " + stat.Pos[1] + "  y: " + stat.Pos[0];
-  if (stat.finish){
-    stats.innerText = "You found the exit";
-  }
 }
 
 function Step(){
   
-  console.log(StrategySelect.value)
-  var dir = A.step();
-  if (dir === false){
-    stats.innerText = "You died";
+  var stat = S.getStatus(A.ID)
+  if (stat.hp <= 0){
     return
   }
+
+  console.log(StrategySelect.value)
+  var dir = A.step();
   agentToRender = pRun;
   dir = dir as Direction
   for(var i : number = 0; i<100;i++){
-
+    
     setTimeout(() => {
       if (dir === Direction.Down){
         pRun.y += 1;
@@ -116,23 +140,47 @@ function Step(){
     agentToRender = p
     NewNeigbours();
 
-  },16*100)
+    stat = S.getStatus(A.ID)
 
+    stats.innerText = "HP: " + stat.HP + "     SwordStrenght: " + stat.SwordStrenght;
+    coordParagraph.innerText = "x: " + stat.Pos[1] + "  y: " + stat.Pos[0];
+    if (stat.hp <= 0){
+      stats.innerText = "You died: " + stats.innerText;
+      return;
+    }else if(stat.finish){
+      stats.innerText = "You found the exit: " + stats.innerText;
+      return;
+    }
+
+    
+    if(autorun){
+      setTimeout(() => {
+        Step();
+      }, 500);
+    }
+
+  },16*100)
 }
 
 function newPlayer(){
   var strategy : Strategy;
   if(StrategySelect.value === "Agressiv"){
-    strategy = new AgressivStrategy(50);
+    strategy = new AgressivStrategy(breite);
   } else if(StrategySelect.value === "LeftWall"){
-    strategy = new LeftWallStrategy(50);
+    strategy = new LeftWallStrategy(breite);
   } else if(StrategySelect.value === "LeftWallPacifist"){
-    strategy = new LeftWallStrategyAndMostlyPacifistStrategy(50);
+    strategy = new LeftWallStrategyAndMostlyPacifistStrategy(breite);
   } else {
-    strategy = new RndStrategy(50);
+    strategy = new RndStrategy(breite);
   }
-  A = new Agent(S.createAgent(),50,50,S,strategy);
+  A = new Agent(S.createAgent(),breite, höhe, S,strategy);
   NewNeigbours();
 }
+
+autorunLever.addEventListener('change',function(){
+  autorun = !autorun;
+});
 document.querySelector('button[type=step]',).addEventListener('click',Step)
 document.querySelector('button[type=new_player]',).addEventListener('click',newPlayer)
+
+//http://localhost:5000/?breite=5&höhe=4&monster=5&sword=7
