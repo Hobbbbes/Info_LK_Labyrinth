@@ -9,6 +9,8 @@ import {RndStrategy} from "./strategy/RndStrategy.js"
 import { Direction, Strategy } from "./strategy/Strategy.js";
 import { Room } from "./raum.js";
 
+const queryString = window.location.search;
+const urlParams = new URLSearchParams(queryString);
 
 const canvas = document.querySelector('canvas[id="1"') as HTMLCanvasElement;
 const stats = document.getElementById("1.1") as HTMLParagraphElement;
@@ -38,8 +40,33 @@ var pAttack = new Player("sprites/adventurer-attack1-",270,170,4);
 var pRun = new Player("sprites/adventurer-run-",270,170,4)
 var autorun = false;
 
-var S = new Spiel(50,50,20,20)
+var breite:number = parseInt(urlParams.get("breite"), 10);
+var höhe = parseInt(urlParams.get("höhe"), 10);
+var monster = parseInt(urlParams.get("monster"), 10);
+var sword = parseInt(urlParams.get("sword"), 10);
+
+//setzte defaultwerte, falls keine parameter übergeben wurden
+if(isNaN(breite)){
+  breite = 20;
+}
+
+if(isNaN(höhe)){
+  höhe = 20;
+}
+
+if(isNaN(monster)){
+  monster = 20;
+}
+
+if(isNaN(sword)){
+  sword = 20;
+}
+
+console.log("h: " + höhe);
+
+var S = new Spiel(höhe, breite, monster, sword)
 var A : Agent
+
 var agentToRender = p;
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -130,15 +157,15 @@ function Step(){
 function newPlayer(){
   var strategy : Strategy;
   if(StrategySelect.value === "Agressiv"){
-    strategy = new AgressivStrategy(50);
+    strategy = new AgressivStrategy(breite);
   } else if(StrategySelect.value === "LeftWall"){
-    strategy = new LeftWallStrategy(50);
+    strategy = new LeftWallStrategy(breite);
   } else if(StrategySelect.value === "LeftWallPacifist"){
-    strategy = new LeftWallStrategyAndMostlyPacifistStrategy(50);
+    strategy = new LeftWallStrategyAndMostlyPacifistStrategy(breite);
   } else {
-    strategy = new RndStrategy(50);
+    strategy = new RndStrategy(breite);
   }
-  A = new Agent(S.createAgent(),50,50,S,strategy);
+  A = new Agent(S.createAgent(),breite, höhe, S,strategy);
   NewNeigbours();
 }
 
@@ -147,3 +174,5 @@ autorunLever.addEventListener('change',function(){
 });
 document.querySelector('button[type=step]',).addEventListener('click',Step)
 document.querySelector('button[type=new_player]',).addEventListener('click',newPlayer)
+
+//http://localhost:5000/?breite=5&höhe=4&monster=5&sword=7
