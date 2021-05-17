@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:latest
 
 ENV DEBIAN_FRONTEND 'noninteractive'
 RUN apt update && apt -y upgrade && apt install -y git nodejs npm 
