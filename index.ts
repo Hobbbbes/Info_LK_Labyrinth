@@ -107,22 +107,17 @@ function NewNeigbours(){
   } else {
     left = new Room_Draw(false,false,left.x,left.y)
   }
-  var stat = S.getStatus(A.ID)
-  stats.innerText = "HP: " + stat.HP + "     SwordStrenght: " + stat.SwordStrenght;
-  coordParagraph.innerText = "x: " + stat.Pos[1] + "  y: " + stat.Pos[0];
-  if (stat.finish){
-    stats.innerText = "You found the exit";
-  }
 }
 
 function Step(){
   
-  console.log(StrategySelect.value)
-  var dir = A.step();
-  if (dir === false){
-    stats.innerText = "You died";
+  var stat = S.getStatus(A.ID)
+  if (stat.hp <= 0){
     return
   }
+
+  console.log(StrategySelect.value)
+  var dir = A.step();
   agentToRender = pRun;
   dir = dir as Direction
   for(var i : number = 0; i<100;i++){
@@ -144,6 +139,19 @@ function Step(){
     pRun.y = startY
     agentToRender = p
     NewNeigbours();
+
+    stat = S.getStatus(A.ID)
+
+    stats.innerText = "HP: " + stat.HP + "     SwordStrenght: " + stat.SwordStrenght;
+    coordParagraph.innerText = "x: " + stat.Pos[1] + "  y: " + stat.Pos[0];
+    if (stat.hp <= 0){
+      stats.innerText = "You died: " + stats.innerText;
+      return;
+    }else if(stat.finish){
+      stats.innerText = "You found the exit: " + stats.innerText;
+      return;
+    }
+
     
     if(autorun){
       setTimeout(() => {
