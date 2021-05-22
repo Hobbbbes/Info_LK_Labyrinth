@@ -9,6 +9,10 @@ export default class Spiel {
   private agents: [number, number, number][]; // [[raumIndex, HP, attackDMG], ...]
   private current_agent: number;
   private g: GitterNetz;
+  public get Gitternetz() : GitterNetz {
+    return this.g;
+  }
+  
   private monster:number
   private sword:number
 

@@ -8,18 +8,22 @@ import {LeftWallStrategyAndMostlyPacifistStrategy} from "./strategy/LeftWallStra
 import {RndStrategy} from "./strategy/RndStrategy.js"
 import { Direction, Strategy } from "./strategy/Strategy.js";
 import { Room } from "./raum.js";
-
+const scale = 15;
 const queryString = window.location.search;
 const urlParams = new URLSearchParams(queryString);
 
-const canvas = document.querySelector('canvas[id="1"') as HTMLCanvasElement;
-const stats = document.getElementById("1.1") as HTMLParagraphElement;
+const canvas = document.querySelector('canvas[id="1.1"') as HTMLCanvasElement;
+const lab_canvas = document.querySelector('canvas[id="1.2"') as HTMLCanvasElement;
+
+const stats = document.getElementById("stats") as HTMLParagraphElement;
 const StrategySelect = document.getElementById("strategy") as HTMLSelectElement;
-const coordParagraph = document.getElementById("1.2") as HTMLParagraphElement;
+const coordParagraph = document.getElementById("pos") as HTMLParagraphElement;
 let autorunLever = document.getElementById('autorun');
 canvas.width = 600;
 canvas.height = 600;
+
 const ctx = canvas.getContext("2d");
+
 ctx.fillStyle = "#a86b32";
 ctx.imageSmoothingEnabled = false;
 
@@ -61,12 +65,14 @@ if(isNaN(monster)){
 if(isNaN(sword)){
   sword = 20;
 }
-
+lab_canvas.width = scale * (breite+1);
+lab_canvas.height = scale * (höhe+1);
+const lab_ctx = lab_canvas.getContext("2d");
 console.log("h: " + höhe);
 
 var S = new Spiel(höhe, breite, monster, sword)
 var A : Agent
-
+S.Gitternetz.show_draw([-1,-1],lab_ctx);
 var agentToRender = p;
 setInterval(() => {
   ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -110,13 +116,6 @@ function NewNeigbours(){
 }
 
 function Step(){
-  
-  var stat = S.getStatus(A.ID)
-  if (stat.hp <= 0){
-    return
-  }
-
-  console.log(StrategySelect.value)
   var dir = A.step();
   agentToRender = pRun;
   dir = dir as Direction
@@ -140,7 +139,7 @@ function Step(){
     agentToRender = p
     NewNeigbours();
 
-    stat = S.getStatus(A.ID)
+    let stat = S.getStatus(A.ID)
 
     stats.innerText = "HP: " + stat.HP + "     SwordStrenght: " + stat.SwordStrenght;
     coordParagraph.innerText = "x: " + stat.Pos[1] + "  y: " + stat.Pos[0];
@@ -151,12 +150,12 @@ function Step(){
       stats.innerText = "You found the exit: " + stats.innerText;
       return;
     }
-
-    
+    lab_ctx.clearRect(0, 0, lab_canvas.width, lab_canvas.height);
+    S.Gitternetz.show_draw(stat.Pos,lab_ctx);
     if(autorun){
       setTimeout(() => {
         Step();
-      }, 500);
+      }, 700);
     }
 
   },16*100)

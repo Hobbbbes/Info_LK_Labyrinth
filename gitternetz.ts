@@ -77,6 +77,60 @@ export class GitterNetz {
       }
     }
   }
+
+  show_draw(agentPos : [number,number], ctx : CanvasRenderingContext2D){
+    ctx.lineWidth = 1
+    let scale : number = 15;
+    ctx.moveTo(0,0);
+    ctx.lineTo(this.breit * scale,0);
+    ctx.stroke();
+    let draw_line = (xs:number, ys : number, xe : number, ye : number) => {
+      ctx.moveTo(xs,ys);
+      ctx.lineTo(xe,ye);
+      ctx.stroke();
+    }
+    let draw_circle = (x : number, y : number, r : number)=>{
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, 2 * Math.PI,false);
+      ctx.fill();
+      ctx.stroke();
+      ctx.closePath();
+    }
+    for (let i = 0; i < this.hoch * this.breit; i++) {
+      let y = Math.floor(i / this.breit)
+      let x = i % this.hoch
+      if (isElem([i, i + this.breit, false], this.edges) || i > (this.breit * (this.hoch - 1)) - 1) {
+        draw_line(x*scale, (y+1)*scale,(x+1)*scale,(y+1)*scale);
+      }
+      if (isElem([i, i + 1, false], this.edges)) {
+        draw_line((x+1)*scale, y*scale,(x+1)*scale,(y+1)*scale);
+      }
+      if(this.rooms[i][1].monsterhp > 0){
+        ctx.fillStyle = "#0000FF";
+        draw_circle(x*scale + scale/2, y*scale + scale/2, scale/4)
+      } else if(this.rooms[i][1].sword > 0){
+        ctx.fillStyle = "#FFFF00";
+        draw_circle(x*scale + scale/2, y*scale + scale/2, scale/4)
+      }
+      if (this.rooms[i][1].monsterhp > 0 && this.rooms[i][1].sword > 0){
+        ctx.fillStyle = "#00FF00";
+        draw_circle(x*scale + scale/2, y*scale + scale/2, scale/4)
+      }
+      if((i + 1) % this.breit === 0){
+        if (y !== this.start) {
+          draw_line(0, y*scale,0,(y+1)*scale);
+        }
+        if (y !== this.ende) {
+          draw_line(this.breit * scale, y*scale,this.breit * scale,(y+1)*scale);
+        }
+      }
+
+    }
+    ctx.fillStyle = "#FF0000";
+    draw_circle(agentPos[1]*scale + scale/2, agentPos[0]*scale + scale/2, scale/2);
+
+  }
+
   show(agentPos:number) {
     let strE: string = "|"
     let strS: string = " "
