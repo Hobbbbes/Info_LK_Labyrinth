@@ -26,7 +26,7 @@ export class LeftWallStrategyAndMostlyPacifistStrategy extends Strategy{
       let room:Room = this.visitedRooms[roomNum][0];
 
       if(room.monster > 0){
-        if(room.monster - ap >= hp && room.monster - room.sword >= hp){
+        if(room.monster - ap - room.sword >= hp){
           this.visitedRooms[roomNum][2] = Math.max(Visited.Monster_invincible, this.visitedRooms[roomNum][2]);
         }else{
           this.visitedRooms[roomNum][2] = Math.max(Visited.Monster, this.visitedRooms[roomNum][2]);
