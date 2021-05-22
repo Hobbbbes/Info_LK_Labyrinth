@@ -97,8 +97,9 @@ export class GitterNetz {
       ctx.closePath();
     }
     for (let i = 0; i < this.hoch * this.breit; i++) {
-      let y = Math.floor(i / this.breit)
-      let x = i % this.hoch
+      let coords = this.roomNumToCoords(i);
+      let y = coords[0]
+      let x = coords[1]
       if (isElem([i, i + this.breit, false], this.edges) || i > (this.breit * (this.hoch - 1)) - 1) {
         draw_line(x*scale, (y+1)*scale,(x+1)*scale,(y+1)*scale);
       }
